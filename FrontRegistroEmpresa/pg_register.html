@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../FrontLoginUsuario/pg_login.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>TRAVO - Registro Empresa</title>
+</head>
+<body>
+    <main class="form-signin text-center">
+        <img src="../FrontLoginUsuario/imagens/icone_travo.png" width="110" height="110" class="mb-4">
+        
+        <div class="btn-group mb-3 w-100" role="group" aria-label="Tipo de Registro">
+            <input type="radio" class="btn-check" name="tipo-registro" id="usuario" autocomplete="off">
+            <label class="btn btn-outline-warning" for="usuario">Usuário</label>
+
+            <input type="radio" class="btn-check" name="tipo-registro" id="empresa" autocomplete="off" checked>
+            <label class="btn btn-outline-warning" for="empresa">Empresa</label>
+        </div>
+        
+        <form class="needs-validation" novalidate>
+            <div class="form-floating mb-2">
+                <input type="text" class="form-control" id="razaoSocial" placeholder="Razão Social" required>
+                <label for="razaoSocial">Razão Social</label>
+                <div class="invalid-feedback">
+                    Por favor, insira a razão social.
+                </div>
+            </div>
+
+            <div class="form-floating mb-2">
+                <input type="text" class="form-control" id="cnpj" placeholder="CNPJ" required>
+                <label for="cnpj">CNPJ</label>
+                <div class="invalid-feedback">
+                    Por favor, insira um CNPJ válido.
+                </div>
+            </div>
+
+            <div class="form-floating mb-2">
+                <input type="text" class="form-control" id="nomeFantasia" placeholder="Nome Fantasia" required>
+                <label for="nomeFantasia">Nome Fantasia</label>
+                <div class="invalid-feedback">
+                    Por favor, insira o nome fantasia.
+                </div>
+            </div>
+
+            <div class="form-floating mb-2">
+                <input type="email" class="form-control" id="email" placeholder="Email" required>
+                <label for="email">Email</label>
+                <div class="invalid-feedback">
+                    Por favor, insira um email válido.
+                </div>
+            </div>
+
+            <div class="form-floating mb-2">
+                <input type="tel" class="form-control" id="telefone" placeholder="Telefone" required>
+                <label for="telefone">Telefone</label>
+                <div class="invalid-feedback">
+                    Por favor, insira um telefone válido.
+                </div>
+            </div>
+
+            <div class="form-floating mb-2">
+                <input type="password" class="form-control" id="senha" placeholder="Senha" required>
+                <label for="senha">Senha</label>
+                <div class="invalid-feedback">
+                    Por favor, insira uma senha.
+                </div>
+            </div>
+
+            <div class="form-floating mb-2">
+                <input type="password" class="form-control" id="confirmarSenha" placeholder="Confirmar Senha" required>
+                <label for="confirmarSenha">Confirmar Senha</label>
+                <div class="invalid-feedback">
+                    As senhas não coincidem.
+                </div>
+            </div>
+
+            <button class="btn btn-warning w-100" type="submit">Registrar Empresa</button>
+            <div class="mt-3">
+                <a href="../FrontLoginEmpresa/pg_login.html" class="text-warning text-decoration-none">
+                    Já tem uma conta? Faça login
+                </a>
+            </div>
+        </form>
+    </main>
+
+    <script>
+        // Script para validação do formulário
+        (function () {
+            'use strict'
+            var forms = document.querySelectorAll('.needs-validation')
+            Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+        })()
+
+        // Add new script for navigation
+        document.getElementById('empresa').addEventListener('change', function() {
+            window.location.href = '../FrontRegistroEmpresa/pg_register.html';
+        });
+        
+        document.getElementById('usuario').addEventListener('change', function() {
+            window.location.href = '../FrontRegistroUsuario/pg_register.html';
+        });
+    </script>
+</body>
+</html> 
