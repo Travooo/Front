@@ -3,7 +3,7 @@ import EstablishmentCard from "./establishmentCard";
 
 const EstablishmentList = ({ establishments }) => {
   return (
-    <div className="grid grid-cols-2 gap-4 p-4">
+    <div className="grid grid-cols-3 gap-4 p-4"> {/* Aumenta o número de colunas */}
       {establishments.map((est, index) => (
         <EstablishmentCard key={index} {...est} />
       ))}

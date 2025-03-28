@@ -1,4 +1,4 @@
-import Header from "./components/Header";
+import Header from "./components/header";
 import Footer from "../FrontHome/components/footer";
 import SearchBar from "./components/searchBar";
 import LocationSidebar from "./components/locationSidebar";
