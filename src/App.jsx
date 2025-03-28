@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import HomePage from './FrontHome/page';
 import LoginUser from './FrontLoginUser/pgLoginUser';
-import PgPrincipal from './FrontPgPrincipal/pgPrincial';
+import PgLoginAdm from './FrontPgPrincipal/pgLoginAdm';
 
 import './styles/tailwind.css';
 
@@ -13,7 +13,7 @@ function App() {
         <Routes>
           <Route path="/home" element={<HomePage />} />
           <Route path="/loginUser" element={<LoginUser />} />
-          <Route path="/travoo" element={<PgPrincipal />} />
+          <Route path="/travoo" element={<PgLoginAdm />} />
         </Routes>
     </Router>
   );
