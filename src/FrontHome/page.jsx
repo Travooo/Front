@@ -14,30 +14,32 @@ const Page = () => {
   };
 
   return (
-    <main className="relative">
-      <div className="flex overflow-hidden relative flex-col items-start w-full bg-neutral-100 min-h-[1740px] max-md:max-w-full">
-        <Header />
-
-        <div className="flex z-0 max-w-full min-h-10 w-[811px]" />
-        <div className="flex z-0 max-w-full min-h-[100px] w-[100px]" />
-
-        <section className="absolute z-0 max-w-full rounded-none h-[633px] right-[27px] top-[154px] w-[1318px]">
+    <div className="flex flex-col min-h-screen">
+      <Header />
+      <div className="w-full bg-neutral-100 px-4 py-4">
+      <div className="max-w-screen-xl mx-auto flex justify-center">
+        <SearchBar />
+      </div>
+    </div>
+      <div className="w-full bg-neutral-100 py-4 flex-grow mt-16">
+        <div className="max-w-screen-xl mx-auto px-4">
           <div className="flex gap-5 max-md:flex-col">
-            <div className="w-[34%] max-md:ml-0 max-md:w-full">
+            <div className="w-[34%] max-md:w-full">
               <LocationSidebar onLocationSelect={handleLocationSelect} />
             </div>
-            <div className="ml-5 w-[66%] max-md:ml-0 max-md:w-full">
+            <div className="w-[66%] max-md:w-full">
               <MapDisplay selectedLocationId={selectedLocationId} />
             </div>
           </div>
-        </section>
-
-        <Footer />
-        <HeroSection />
-
-        <SearchBar />
+        </div>
       </div>
-    </main>
+      <div className="w-full bg-neutral-100 py-24">
+        <div className="max-w-screen-xl mx-auto px-4">
+          <HeroSection />
+        </div>
+      </div>
+      <Footer />
+    </div>
   );
 };
 

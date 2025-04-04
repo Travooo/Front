@@ -1,19 +1,29 @@
-import React from "react";
-import Logo from "./logo";
-import NavigationMenu from "./navigationMenu";
-import AuthButtons from "./authButtons";
+import { Link } from "react-router-dom";
+import Logo from "./Logo";
 
 const Header = () => {
   return (
-    <header className="flex overflow-hidden relative z-0 flex-wrap gap-6 items-start self-stretch w-full whitespace-nowrap border-b bg-stone-900 border-zinc-300 min-h-[78px] shadow-[0px_4px_4px_rgba(0,0,0,0.25)] max-md:max-w-full">
-      <Logo />
-      <NavigationMenu />
-      <AuthButtons />
-      <img
-        src="https://cdn.builder.io/api/v1/image/assets/TEMP/b023f02fcc43ed7aa3546cdeacfd63b997f60b684baf31acacb0d9b2e5d83d5f?placeholderIfAbsent=true&apiKey=b070fc6abbbe49959790aa080d8f429b"
-        alt="Menu icon"
-        className="object-contain absolute z-0 shrink-0 w-10 h-9 aspect-[1.11] bottom-[15px] left-[9px]"
-      />
+    <header className="flex items-center w-full px-6 md:px-12 min-h-[78px] bg-stone-900 border-b border-zinc-300 shadow-md">
+      <div className="flex items-center">
+        <Logo />
+      </div>
+      <nav className="hidden md:flex flex-1 justify-center items-center gap-10 text-white text-xl">
+        <Link to="/painel" className="px-3 py-2 hover:text-amber-500 transition">
+          Painel
+        </Link>
+        <Link to="/locais" className="px-3 py-2 hover:text-amber-500 transition">
+          Locais
+        </Link>
+        <Link to="/cupons" className="px-3 py-2 hover:text-amber-500 transition">
+          Cupons
+        </Link>
+        <Link to="/club-travo" className="px-3 py-2 hover:text-amber-500 transition">
+          Club Travo
+        </Link>
+      </nav>
+
+      {/* Espaço reservado para futuros elementos do lado direito */}
+      <div className="hidden md:flex w-[150px]"></div>
     </header>
   );
 };
