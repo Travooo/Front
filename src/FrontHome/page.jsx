@@ -4,7 +4,7 @@ import LocationSidebar from "./components/locationSideBar";
 import MapDisplay from "./components/mapDisplay";
 import HeroSection from "./components/heroSection";
 import SearchBar from "./components/searchBar";
-import Footer from "./components/footer";
+import Footer from "../components/footer";
 
 const Page = () => {
   const [selectedLocationId, setSelectedLocationId] = useState(null);
@@ -13,6 +13,10 @@ const Page = () => {
     setSelectedLocationId(locationId);
   };
 
+
+
+
+  
   return (
     <div className="flex flex-col min-h-screen">
       <Header />

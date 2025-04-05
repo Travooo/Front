@@ -1,8 +1,8 @@
 "use client"
 
 import { useState } from "react"
-import Header from "../FrontHome/components/header"
-import Footer from "../FrontHome/components/footer"
+import Header from "../components/header"
+import Footer from "../components/footer"
 import { Pencil, Trash2, Search, Plus } from "lucide-react"
 import React from "react"
 
