@@ -5,6 +5,7 @@ import LoginUser from './FrontLoginUser/pgLoginUser';
 import PgLoginAdm from './FrontPgPrincipal/pgLoginAdm';
 import PgEditLoginAdm from './FrontPgPrincipal/pgEditLoginAdm';
 import Servicos from './meus-servicos/page';
+import PgCupons from './FrontCupons/pgCupons';
 
 import './styles/tailwind.css';
 
@@ -18,6 +19,7 @@ function App() {
           <Route path="/travoo" element={<PgLoginAdm />} />
           <Route path="/travoo/edit" element={<PgEditLoginAdm />} />
           <Route path="/meus-servicos" element={<Servicos />} />
+          <Route path="/cupons" element={<PgCupons />} />
         </Routes>
     </Router>
   );
