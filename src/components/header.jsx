@@ -16,7 +16,7 @@ const Header = () => {
         <Link to="/locais" className="px-3 py-2 hover:text-amber-500 transition">
           Locais
         </Link>
-        <Link to="/cupons" className="px-3 py-2 hover:text-amber-500 transition">
+        <Link to="/meus-cupons" className="px-3 py-2 hover:text-amber-500 transition">
           Cupons
         </Link>
         <Link to="/club-travo" className="px-3 py-2 hover:text-amber-500 transition">
