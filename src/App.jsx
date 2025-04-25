@@ -7,6 +7,7 @@ import PgEditLoginAdm from './FrontPgPrincipal/pgEditLoginAdm';
 import Servicos from './meus-servicos/page';
 import PgCupons from './FrontCupons/pgCupons';
 
+import CadastrarLocal from './cadastrar-local/page';
 import './styles/tailwind.css';
 
 
@@ -19,7 +20,11 @@ function App() {
           <Route path="/travoo" element={<PgLoginAdm />} />
           <Route path="/travoo/edit" element={<PgEditLoginAdm />} />
           <Route path="/meus-servicos" element={<Servicos />} />
+<<<<<<< HEAD
           <Route path="/cupons" element={<PgCupons />} />
+=======
+          <Route path="/cadastrar-local" element={<CadastrarLocal />} />
+>>>>>>> 2dcfb0a (criação da página cadastrar-local)
         </Routes>
     </Router>
   );
