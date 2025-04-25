@@ -20,11 +20,8 @@ function App() {
           <Route path="/travoo" element={<PgLoginAdm />} />
           <Route path="/travoo/edit" element={<PgEditLoginAdm />} />
           <Route path="/meus-servicos" element={<Servicos />} />
-<<<<<<< HEAD
           <Route path="/cupons" element={<PgCupons />} />
-=======
           <Route path="/cadastrar-local" element={<CadastrarLocal />} />
->>>>>>> 2dcfb0a (criação da página cadastrar-local)
         </Routes>
     </Router>
   );
