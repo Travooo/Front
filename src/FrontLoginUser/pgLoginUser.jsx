@@ -6,10 +6,35 @@ export default function LoginForm() {
   const [password, setPassword] = useState("");
   const navigate = useNavigate(); // Criando a função de navegação
 
-  const handleLogin = (event) => {
+  const handleLogin = async (event) => {
     event.preventDefault();
-    navigate("/pg_inicial_login/teste_map"); // Melhor forma de navegar (navega paa a página escificada)
+  
+    try {
+      const resposta = await fetch("http://localhost:3000/rest/v1/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: email,
+          senha: password,
+        }),
+      });
+  
+      const dados = await resposta.json();
+  
+      if (resposta.ok) {
+        alert("Login bem-sucedido!");
+        navigate("/pg_inicial_login/teste_map");
+      } else {
+        alert(dados.mensagem || "Email ou senha incorretos!");
+      }
+    } catch (error) {
+      console.error("Erro na requisição:", error);
+      alert("Erro no login. Tente novamente.");
+    }
   };
+  
 
   return (
     <main className="flex justify-center items-center h-screen bg-cover bg-center text-white"
