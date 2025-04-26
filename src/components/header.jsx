@@ -13,14 +13,11 @@ const Header = () => {
         <Link to="/painel" className="px-3 py-2 hover:text-amber-500 transition">
           Painel
         </Link>
-        <Link to="/locais" className="px-3 py-2 hover:text-amber-500 transition">
-          Locais
+        <Link to="/meus-servicos" className="px-3 py-2 hover:text-amber-500 transition">
+          Serviços
         </Link>
         <Link to="/meus-cupons" className="px-3 py-2 hover:text-amber-500 transition">
           Cupons
-        </Link>
-        <Link to="/club-travo" className="px-3 py-2 hover:text-amber-500 transition">
-          Club Travo
         </Link>
       </nav>
 

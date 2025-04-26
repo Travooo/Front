@@ -19,7 +19,7 @@ function App() {
         <Routes>
           <Route path="/home" element={<HomePage />} />
           <Route path="/loginUser" element={<LoginUser />} />
-          <Route path="/travoo" element={<PgLoginAdm />} />
+          <Route path="/painel" element={<PgLoginAdm />} />
           <Route path="/travoo/edit" element={<PgEditLoginAdm />} />
           <Route path="/meus-servicos" element={<Servicos />} />
           <Route path="/cupons" element={<PgCupons />} />
