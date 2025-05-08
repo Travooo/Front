@@ -5,6 +5,7 @@ import Header from "../components/header"
 import Footer from "../components/footer"
 import { Pencil, Trash2, Search, Plus } from "lucide-react"
 import React from "react"
+import { useNavigate } from 'react-router-dom';
 
 const locaisIniciais = [
   {
@@ -29,6 +30,7 @@ const locaisIniciais = [
 const Servicos = () => {
   const [locais, setLocais] = useState(locaisIniciais)
   const [termoBusca, setTermoBusca] = useState("")
+  const navigate = useNavigate();
 
   const locaisFiltrados = locais.filter(
     (local) =>
@@ -64,10 +66,14 @@ const Servicos = () => {
             />
           </div>
           <div className="flex gap-2">
-            <button className="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-md flex items-center gap-2 transition-colors">
-              <Plus className="h-5 w-5" />
-              <span>Add Local</span>
-            </button>
+          <button
+            onClick={() => navigate('/cadastrar-local')}
+            className="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-md flex items-center gap-2 transition-colors"
+          >
+            <Plus className="h-5 w-5" />
+            <span>Add Local</span>
+          </button>
+          
             <button className="border border-gray-300 bg-white hover:bg-gray-50 px-4 py-2 rounded-md transition-colors">
               Filtros
             </button>
