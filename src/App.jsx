@@ -6,6 +6,7 @@ import PgLoginAdm from './FrontPgPrincipal/pgLoginAdm';
 import PgEditLoginAdm from './FrontPgPrincipal/pgEditLoginAdm';
 import Servicos from './meus-servicos/page';
 import PgCupons from './FrontCupons/pgCupons';
+import PerfilEstabelecimento from './perfilEstabelecimento/localPage';
 
 import CadastrarLocal from './cadastrar-local/page';
 import CuponsPage from './FrontPgCupons/cuponsPage';
@@ -25,6 +26,7 @@ function App() {
           <Route path="/cupons" element={<PgCupons />} />
           <Route path="/cadastrar-local" element={<CadastrarLocal />} />
           <Route path="/meus-cupons" element={<CuponsPage />} />
+          <Route path="/perfil-estabelecimento" element={<PerfilEstabelecimento />} />
         </Routes>
     </Router>
   );
