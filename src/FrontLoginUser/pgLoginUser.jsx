@@ -3,9 +3,10 @@ import { useNavigate } from "react-router-dom"; // Importando o hook de navegaç
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [senha, setPassword] = useState("");
   const navigate = useNavigate(); // Criando a função de navegação
-
+  console.log('email', email);
+  console.log('senha' , senha);
   const handleLogin = async (event) => {
     event.preventDefault();
   
@@ -17,7 +18,7 @@ export default function LoginForm() {
         },
         body: JSON.stringify({
           email: email,
-          senha: password,
+          senha: senha,
         }),
       });
   
@@ -25,7 +26,7 @@ export default function LoginForm() {
   
       if (resposta.ok) {
         alert("Login bem-sucedido!");
-        navigate("/pg_inicial_login/teste_map");
+        navigate("/painel"); // Navegando para a página de painel após o login
       } else {
         alert(dados.mensagem || "Email ou senha incorretos!");
       }
@@ -57,7 +58,7 @@ export default function LoginForm() {
             <label className="block text-left mb-1">Senha</label>
             <input
               type="password"
-              value={password}
+              value={senha}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full p-2 border border-gray-400 rounded bg-gray-200 text-gray-900"
               placeholder="Digite sua senha"
