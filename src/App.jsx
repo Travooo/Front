@@ -10,6 +10,7 @@ import PerfilEstabelecimento from './perfilEstabelecimento/localPage';
 
 import CadastrarLocal from './cadastrar-local/page';
 import CuponsPage from './FrontPgCupons/cuponsPage';
+import RegisterPage from './registro/page';
 import './styles/tailwind.css';
 
 
@@ -27,6 +28,7 @@ function App() {
           <Route path="/cadastrar-local" element={<CadastrarLocal />} />
           <Route path="/meus-cupons" element={<CuponsPage />} />
           <Route path="/perfil-estabelecimento" element={<PerfilEstabelecimento />} />
+          <Route path="/registro" element={<RegisterPage />} />
         </Routes>
     </Router>
   );
