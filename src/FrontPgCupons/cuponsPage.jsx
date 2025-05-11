@@ -10,7 +10,6 @@ const CuponsPage = () => {
     { id: 1, name: "Promoção Verão", discount: 10, expiration: "2024-07-31", enabled: true },
     { id: 2, name: "Desconto Natal", discount: 20, expiration: "2024-12-25", enabled: false },
   ]);
-
   const handleSaveCoupon = async (newCoupon) => {
     try {
       if (newCoupon.id) {

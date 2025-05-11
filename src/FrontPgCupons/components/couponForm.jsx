@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 
 const CouponForm = ({ onSave, editingCoupon, setEditingCoupon }) => {
-  const [name, setName] = useState("");
-  const [discount, setDiscount] = useState("");
+  const [nome, setName] = useState("");
+  const [descricao, setDiscount] = useState("");
   const [expiration, setExpiration] = useState("");
   const [enabled, setEnabled] = useState(false);
 
   useEffect(() => {
     if (editingCoupon) {
-      setName(editingCoupon.name);
-      setDiscount(editingCoupon.discount);
+      setName(editingCoupon.nome);
+      setDiscount(editingCoupon.descricao);
       setExpiration(editingCoupon.expiration);
       setEnabled(editingCoupon.enabled);
     }
@@ -17,7 +17,7 @@ const CouponForm = ({ onSave, editingCoupon, setEditingCoupon }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSave({ id: editingCoupon?.id, name, discount, expiration, enabled });
+    onSave({ id: editingCoupon?.id, nome, descricao, expiration, enabled });
     setName("");
     setDiscount("");
     setExpiration("");
@@ -33,7 +33,7 @@ const CouponForm = ({ onSave, editingCoupon, setEditingCoupon }) => {
           type="text"
           placeholder="Nome do cupom"
           className="border p-2 rounded"
-          value={name}
+          value={nome}
           onChange={(e) => setName(e.target.value)}
           required
         />
@@ -42,7 +42,7 @@ const CouponForm = ({ onSave, editingCoupon, setEditingCoupon }) => {
           type="number"
           placeholder="Taxa de desconto (%)"
           className="border p-2 rounded"
-          value={discount}
+          value={descricao}
           onChange={(e) => setDiscount(e.target.value)}
           required
           min="0"

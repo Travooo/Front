@@ -5,9 +5,9 @@ import { Eye, EyeOff } from "lucide-react"
 
 function RegisterForm() {
   const [formData, setFormData] = useState({
-    name: "",
+    nome_completo: "",
     email: "",
-    password: "",
+    senha: "",
     confirmPassword: "",
   })
 
@@ -22,12 +22,48 @@ function RegisterForm() {
     }))
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    // Aqui você pode adicionar validação e lógica para enviar os dados
-    console.log("Dados do formulário:", formData)
-    // Implementar redirectToConfirmation() aqui
+    if (!formData.nome_completo || !formData.email || !formData.senha || !formData.confirmPassword) {
+      alert("Preencha todos os campos.")
+      return
+    }
+
+    if (formData.senha !== formData.confirmPassword) {
+      alert("As senhas não coincidem.")
+      return
+    }
+
+    try {
+      const response = await fetch("http://localhost:3000/rest/v1/usuarios", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          nome_completo: formData.nome_completo,
+          email: formData.email,
+          senha: formData.senha,
+        }),
+      })
+
+      const data = await response.json()
+      console.log("Status:", response.status)
+      console.log("Resposta do servidor:", data)
+      if (!response.ok) {
+        throw new Error(data.message || "Erro ao registrar")
+      }
+
+      alert("Usuário registrado com sucesso!")
+      setFormData({
+        nome_completo: "",
+        email: "",
+        senha: "",
+        confirmPassword: "",
+      })
+    } catch (err) {
+      alert(err.message)
+    }
   }
+
 
   return (
     <div className="w-full max-w-[330px] mx-auto text-center p-4 bg-[rgba(110,110,110,0.637)] rounded-[10px] shadow-[0_0_10px_rgba(233,233,233,0.621)] text-white">
@@ -43,8 +79,8 @@ function RegisterForm() {
             <input
               type="text"
               id="name"
-              name="name"
-              value={formData.name}
+              name="nome_completo"
+              value={formData.nome_completo}
               onChange={handleChange}
               className="w-full px-3 py-4 border border-[#aeaeae] rounded-md peer pt-6 bg-[#e3e3e6] text-black focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
               placeholder=" "
@@ -85,8 +121,8 @@ function RegisterForm() {
             <input
               type={showPassword ? "text" : "password"}
               id="password"
-              name="password"
-              value={formData.password}
+              name="senha"
+              value={formData.senha}
               onChange={handleChange}
               className="w-full px-3 py-4 border border-[#aeaeae] rounded-md peer pt-6 bg-[#e3e3e6] text-black focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
               placeholder=" "
