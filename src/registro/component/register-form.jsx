@@ -37,21 +37,23 @@ function RegisterForm() {
     try {
       const response = await fetch("http://localhost:3000/rest/v1/usuarios", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json" 
+        },
         body: JSON.stringify({
           nome_completo: formData.nome_completo,
           email: formData.email,
           senha: formData.senha,
+          admin: false,
+          tipo_plano: 1,
         }),
       })
-
-      const data = await response.json()
-      console.log("Status:", response.status)
-      console.log("Resposta do servidor:", data)
       if (!response.ok) {
-        throw new Error(data.message || "Erro ao registrar")
+        const errorData = await response.json()
+        console.log("Status:", errorData.status)
+        console.log("Resposta do servidor:", errorData)
+        throw new Error(errorData.message || "Erro ao registrar")
       }
-
       alert("Usuário registrado com sucesso!")
       setFormData({
         nome_completo: "",
