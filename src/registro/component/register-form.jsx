@@ -2,7 +2,6 @@ import { useState } from "react"
 import { Eye, EyeOff } from "lucide-react"
 
 
-
 function RegisterForm() {
   const [formData, setFormData] = useState({
     nome_completo: "",
@@ -11,19 +10,65 @@ function RegisterForm() {
     email: "",
     senha: "",
     confirmPassword: "",
+    tipo: "usuario"
   })
 
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [errorDataNascimento, setErrorDataNascimento] = useState("");
+  const [errorEmail, setErrorEmail] = useState("");
+  //const tipos = [
+    //{ label: 'Usuário', value: 'usuario' },
+    //{ label: 'Estabelecimento', value: 'servico' }
+  //];
 
   const handleChange = (e) => {
     const { name, value } = e.target
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }))
-  }
+
+    if (name === "data_nascimento") {
+      let onlyNumbers = value.replace(/\D/g, "");
+      if (onlyNumbers.length > 8) {
+        onlyNumbers = onlyNumbers.slice(0, 8);
+      }
+      let masked = onlyNumbers;
+      if (onlyNumbers.length >= 5) {
+        masked = `${onlyNumbers.slice(0, 2)}/${onlyNumbers.slice(2, 4)}/${onlyNumbers.slice(4)}`;
+      } else if (onlyNumbers.length >= 3) {
+        masked = `${onlyNumbers.slice(0, 2)}/${onlyNumbers.slice(2)}`;
+      }
+      setFormData((prev) => ({
+        ...prev,
+        [name]: masked,
+      }));
+      // Verifique a validade da data após a mudança
+      if (isDateValid(masked)) {
+        setErrorDataNascimento(""); // Se válido, limpe o erro
+      } else {
+        setErrorDataNascimento("Data inválida. OBS: Mínimo 6 anos.");
+      }
+    } else if (name === "email") {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+      if (isEmailValid(value)) {
+        setErrorEmail("");
+      } else {
+        setErrorEmail("Email inválido.");
+      }
+    //} else if (name === "tipo") {
+      //setFormData((prev) => ({
+        //...prev,
+        //tipo: value
+      //}));
+      //return;
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
+  };
 
   const isDateValid = (data) => {
     const [dia, mes, ano] = data.split("/").map(Number);
@@ -41,10 +86,15 @@ function RegisterForm() {
     );
   };
 
+  const isEmailValid = (email) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    if (!formData.nome_completo || formData.nome_usuario || formData.data_nascimento || !formData.email || !formData.senha || !formData.confirmPassword) {
+    if (!formData.nome_completo || !formData.nome_usuario || !formData.data_nascimento || !formData.email || !formData.senha || !formData.confirmPassword /* || !formData.tipo */) {
       alert("Preencha todos os campos.")
       return
     }
@@ -54,6 +104,12 @@ function RegisterForm() {
       return;
     }
     setErrorDataNascimento("");
+
+    if (!isEmailValid(formData.email)) {
+      setErrorEmail("Email inválido.");
+      return;
+    }
+    setErrorEmail("");
 
     if (formData.senha !== formData.confirmPassword) {
       alert("As senhas não coincidem.")
@@ -73,6 +129,7 @@ function RegisterForm() {
           data_nascimento: formData.data_nascimento,
           email: formData.email,
           senha: formData.senha,
+          tipo: formData.tipo,
         }),
       })
       if (!response.ok) {
@@ -93,7 +150,7 @@ function RegisterForm() {
     }
   }
 
-  const inputStyle = "w-full px-3 pt-4 p-3 pb-1 text-base border border-white rounded bg-[#333] text-white peer focus:outline-none focus:ring-2 focus:ring-[#00dac1] focus:border-transparent";
+  const inputStyle = "w-full px-3 pt-4 p-2 pb-1 text-base border border-white rounded bg-[#333] text-white peer focus:outline-none focus:ring-2 focus:ring-[#00dac1] focus:border-transparent";
   const inputLabelStyle = `absolute left-3 text-base text-gray-400 duration-150 transform origin-[0] pointer-events-none transition-all
     peer-placeholder-shown:top-1/2 
     peer-placeholder-shown:-translate-y-1/2 
@@ -107,20 +164,20 @@ function RegisterForm() {
 
 
   return (
-    <div className="w-full max-w-[330px] mx-auto text-center p-4 bg-[rgba(0,0,0,0.7)] rounded-[10px] shadow-[0_0_10px_rgba(233,233,233,0.621)] text-white">
-      <div className="relative w-28 h-28 mx-auto mb-4">
+    <div className="w-full max-w-[330px] h-auto max-h-[97] overflow-auto text-center p-6 bg-[rgba(0,0,0,0.7)] rounded-[10px] shadow-[0_0_10px_rgba(233,233,233,0.621)] text-white">
+      <div className="relative -mt-8 mb-1 w-28 h-20 mx-auto">
         <img src="/imagens/icone_travo.png" alt="Logo TRAVO" width={110} height={110} className="mx-auto" />
       </div>
 
       <h1 className="text-2xl font-semibold mb-6 text-white">Crie sua conta</h1>
 
       <form onSubmit={handleSubmit} className="w-full">
-        <div className="mb-4 relative">
-          <label className="block text-left mb-1">Nome</label>
+        <div className="mb-3 relative">
+          <label className="block text-left text-[15px] mb-0.5" htmlFor="nome_completo">Nome</label>
           <div className="relative">
             <input
               type="text"
-              id="name"
+              id="nome_completo"
               name="nome_completo"
               value={formData.nome_completo}
               onChange={handleChange}
@@ -129,7 +186,7 @@ function RegisterForm() {
               required
             />
             <label
-              htmlFor="name"
+              htmlFor="nome_completo"
               className={inputLabelStyle}
             >
             Digite seu nome completo
@@ -137,12 +194,12 @@ function RegisterForm() {
           </div>
         </div>
 
-        <div className="mb-4 relative">
-          <label className="block text-left mb-1">Nome de usuário</label>
+        <div className="mb-3 relative">
+          <label className="block text-left text-[15px] mb-0.5" htmlFor="nome_usuario">Nome de usuário</label>
           <div className="relative">
             <input
               type="text"
-              id="name"
+              id="nome_usuario"
               name="nome_usuario"
               value={formData.nome_usuario}
               onChange={handleChange}
@@ -151,7 +208,7 @@ function RegisterForm() {
               required
             />
             <label
-              htmlFor="name"
+              htmlFor="nome_usuario"
               className={inputLabelStyle}
             >
               Digite seu nome público
@@ -159,8 +216,32 @@ function RegisterForm() {
           </div>
         </div>
 
-        <div className="mb-4 relative">
-          <label className="block text-left mb-1">Email</label>
+        <div className="mb-3 relative">
+          <label className="block text-left text-[15px] mb-0.5" htmlFor="data_nascimento">Data de nascimento</label>
+          <div className="relative">
+            <input
+              type="text"
+              id="data_nascimento"
+              name="data_nascimento"
+              value={formData.data_nascimento}
+              onChange={handleChange}
+              className= { `${inputStyle} ${errorDataNascimento ? 'border-red-500' : ''}` }
+              maxLength={10}
+              placeholder=" "
+              required
+
+            />
+            <label
+              htmlFor="data_nascimento"
+              className={`${inputLabelStyle} ${formData.data_nascimento !== '' ? 'top-0 translate-y-0 scale-75' : ''} ${errorDataNascimento ? 'text-red-400' : ''}`}
+            >
+              {errorDataNascimento || 'Digite sua data de nascimento'}
+            </label>
+          </div>
+        </div>
+
+        <div className="mb-3 relative">
+          <label className="block text-left text-[15px] mb-0.5" htmlFor="email">Email</label>
           <div className="relative">
             <input
               type="email"
@@ -168,25 +249,25 @@ function RegisterForm() {
               name="email"
               value={formData.email}
               onChange={handleChange} 
-              className= { inputStyle }
+              className= {`${inputStyle} ${errorEmail ? 'border-red-500' : ''}`}
               placeholder=" "
               required
             />
             <label
               htmlFor="email"
-              className={inputLabelStyle}
+              className={`${inputLabelStyle} ${formData.email !== '' ? 'top-0 translate-y-0 scale-75' : ''} ${errorEmail ? 'text-red-400' : ''}`}
             >
-              Digite seu melhor email
+              {errorEmail || 'Digite seu melhor email'}
             </label>
           </div>
         </div>
 
-        <div className="mb-4 relative">
-          <label className="block text-left mb-1">Senha</label>
+        <div className="mb-3 relative">
+          <label className="block text-left text-[15px] mb-0.5" htmlFor="senha">Senha</label>
           <div className="relative">
             <input
-              type={showPassword ? "text" : "password"}
-              id="password"
+              type={showPassword ? "text" : "senha"}
+              id="senha"
               name="senha"
               value={formData.senha}
               onChange={handleChange}
@@ -195,7 +276,7 @@ function RegisterForm() {
               required
             />
             <label
-              htmlFor="password"
+              htmlFor="senha"
               className={inputLabelStyle}
             >
               Digite sua senha
@@ -208,15 +289,16 @@ function RegisterForm() {
               {showPassword ? <EyeOff className="h-5 w-5 text-gray-400" /> : <Eye className="h-5 w-5 text-gray-400" />}
             </button>
           </div>
-          <div className="mt-2 relative">
+
+          <div className="mt-1 relative" htmlFor="confirmPassword">
             <input
-              type={showConfirmPassword ? "text" : "password"}
+              type={showConfirmPassword ? "text" : "confirmPassword"}
               id="confirmPassword"
               name="confirmPassword"
               value={formData.confirmPassword}
               onChange={handleChange}
               className= { inputStyle }
-              placeholder=" "
+              placeholder=""
               required
             />
             <label
@@ -241,7 +323,7 @@ function RegisterForm() {
 
         <button
           type="submit"
-          className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-medium py-3 px-4 rounded-md transition-colors"
+          className="w-full h-10 bg-yellow-400 hover:bg-yellow-500 text-black font-medium px-4 rounded-md transition-colors"
         >
           Registrar
         </button>
@@ -249,5 +331,6 @@ function RegisterForm() {
     </div>
   )
 }
+
 
 export default RegisterForm
