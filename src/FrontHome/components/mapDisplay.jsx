@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { MapContainer, TileLayer, useMap } from "react-leaflet";
+import { MapContainer, TileLayer, useMap,  Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
+
 
 function MapController({ center, zoom }) {
   const map = useMap();
@@ -16,13 +17,28 @@ function MapController({ center, zoom }) {
   return null;
 }
 
-const FORTALEZA_CENTER = [-3.7319, -38.5267];
+const FORTALEZA_CENTER = [-3.7319, -38.5267]; //definem posição inicial do mapa 
+/*
+const locais = [
+  {
+    id: 1,
+    nome: "Praia de Iracema",
+    coordenadas: [-3.7169, -38.5000],
+  },
+  {
+    id: 2,
+    nome: "Dragão do Mar",
+    coordenadas: [-3.7223, -38.5215],
+  },
+];
+*/
+
 
 const MapDisplay = ({ selectedLocationId }) => {
   const [mapCenter, setMapCenter] = useState(FORTALEZA_CENTER);
   const [mapZoom, setMapZoom] = useState(13);
 
-  useEffect(() => {
+  useEffect(() => { //mostra no console se o local selecionado mudar
     if (selectedLocationId) {
       console.log("Local selecionado:", selectedLocationId);
     }
@@ -40,8 +56,14 @@ const MapDisplay = ({ selectedLocationId }) => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        
-        {/* Os marcadores foram removidos daqui */}
+        {/* 
+        {locais.map((local) => (
+        <Marker key={local.id} position={local.coordenadas}>
+          <Popup>{local.nome}</Popup>
+        </Marker>
+      ))}
+        */}
+
         
         <MapController center={mapCenter} zoom={mapZoom} />
       </MapContainer>
