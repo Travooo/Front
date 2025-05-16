@@ -19,6 +19,10 @@ const Header = () => {
         <Link to="/meus-cupons" className="px-3 py-2 hover:text-amber-500 transition">
           Cupons
         </Link>
+        <Link to="/home" className="px-3 py-2 hover:text-amber-500 transition">
+          Sair
+        </Link>
+        
       </nav>
 
       {/* Espaço reservado para futuros elementos do lado direito */}
