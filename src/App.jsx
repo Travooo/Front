@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import HomePage from './FrontHome/page';
 import LoginUser from './FrontLoginUser/pgLoginUser';
-import PgLoginAdm from './FrontPgPrincipal/pgLoginAdm';
+import PgLoginAdm from './FrontPgPrincipal/page';
 import PgEditLoginAdm from './editar-perfil/page';
 import Servicos from './meus-servicos/page';
 import PgCupons from './FrontCupons/pgCupons';

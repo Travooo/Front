@@ -1,4 +1,4 @@
-import Header from "./components/header";
+import Header from "../components/header";
 import Footer from "../components/footer";
 import SearchBar from "./components/searchBar";
 import LocationSidebar from "./components/locationSidebar";
@@ -8,7 +8,7 @@ import FriendCard from "./components/friendCard"; // Componente dos amigos
 import { restaurants } from "./data/restaurants"; // Dados dos restaurantes
 import { friends } from "./data/friends"; // Dados dos amigos
 
-export default function App() {
+export default function Teste() {
   return (
     <div>
       <Header />
