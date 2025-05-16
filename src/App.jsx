@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import HomePage from './FrontHome/page';
 import LoginUser from './FrontLoginUser/pgLoginUser';
 import PgLoginAdm from './FrontPgPrincipal/pgLoginAdm';
-import PgEditLoginAdm from './FrontPgPrincipal/pgEditLoginAdm';
+import PgEditLoginAdm from './editar-perfil/page';
 import Servicos from './meus-servicos/page';
 import PgCupons from './FrontCupons/pgCupons';
 import PerfilEstabelecimento from './perfilEstabelecimento/localPage';
@@ -22,7 +22,7 @@ function App() {
           <Route path="/home" element={<HomePage />} />
           <Route path="/loginUser" element={<LoginUser />} />
           <Route path="/painel" element={<PgLoginAdm />} />
-          <Route path="/travoo/edit" element={<PgEditLoginAdm />} />
+          <Route path="/editar-perfil" element={<PgEditLoginAdm />} />
           <Route path="/meus-servicos" element={<Servicos />} />
           <Route path="/cupons" element={<PgCupons />} />
           <Route path="/cadastrar-local" element={<CadastrarLocal />} />
