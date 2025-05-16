@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom"; // Importando o hook de navegação
+import FooterLinks from "./components/footerLinks"
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
@@ -11,7 +12,7 @@ export default function LoginForm() {
     event.preventDefault();
   
     try {
-      const resposta = await fetch("http://localhost:3000/rest/v1/login", {
+      const resposta = await fetch("http://localhost:3000/rest/v1/usuario/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -73,6 +74,7 @@ export default function LoginForm() {
             Login
           </button>
         </form>
+         <FooterLinks/>
       </div>
     </main>
   );
