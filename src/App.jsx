@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import HomePage from './FrontHome/page';
 import LoginUser from './FrontLoginUser/pgLoginUser';
-import PgLoginAdm from './FrontPgPrincipal/page';
+import Dashboard from './painel/page';
 import PgEditLoginAdm from './editar-perfil/page';
 import Servicos from './meus-servicos/page';
 import PgCupons from './FrontCupons/pgCupons';
@@ -21,7 +21,7 @@ function App() {
         <Routes>
           <Route path="/home" element={<HomePage />} />
           <Route path="/loginUser" element={<LoginUser />} />
-          <Route path="/painel" element={<PgLoginAdm />} />
+          <Route path="/painel" element={<Dashboard />} />
           <Route path="/editar-perfil" element={<PgEditLoginAdm />} />
           <Route path="/meus-servicos" element={<Servicos />} />
           <Route path="/cupons" element={<PgCupons />} />

@@ -6,7 +6,7 @@ import EstablishmentList from "./components/establishmentList";
 import ReviewChart from "./components/reviewChart";
 import Notifications from "./components/notifications";
 
-export default function PgLoginAdm() {
+export default function Dashboard() {
   return (
     <div>
       <Header />
