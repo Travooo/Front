@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import HomePage from './FrontHome/page';
+import HomePage from './home/page';
 import LoginUser from './FrontLoginUser/pgLoginUser';
 import Dashboard from './painel/page';
 import PgEditLoginAdm from './editar-perfil/page';

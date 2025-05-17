@@ -1,5 +1,5 @@
 import React from 'react';
-import Header from '../FrontHome/components/header';
+import Header from '../home/components/header';
 
 function PgCupons() {
   const cupons = [

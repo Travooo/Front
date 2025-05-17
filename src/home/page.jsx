@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import Header from "./components/header";
-import LocationSidebar from "./components/locationSideBar";
-import MapDisplay from "./components/mapDisplay";
-import HeroSection from "./components/heroSection";
-import SearchBar from "./components/searchBar";
+import Header from "../home/components/header";
+import LocationSidebar from "../home/components/locationSideBar";
+import MapDisplay from "../home/components/mapDisplay";
+import HeroSection from "../home/components/heroSection";
+import SearchBar from "../home/components/searchBar";
 import Footer from "../components/footer";
 
 const Page = () => {
