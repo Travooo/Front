@@ -1,6 +1,9 @@
 import { useState } from "react"
 import { Eye, EyeOff } from "lucide-react"
+import { useNavigate } from "react-router-dom";
+
 import FooterLinks from "./footerLinks";
+
 
 function RegisterForm() {
   const [formData, setFormData] = useState({
@@ -10,13 +13,14 @@ function RegisterForm() {
     email: "",
     senha: "",
     confirmPassword: "",
-    tipo: "usuario"
+    //tipo: "usuario"
   })
 
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [errorDataNascimento, setErrorDataNascimento] = useState("");
   const [errorEmail, setErrorEmail] = useState("");
+  const navigate = useNavigate();
   //const tipos = [
     //{ label: 'Usuário', value: 'usuario' },
     //{ label: 'Estabelecimento', value: 'servico' }
@@ -118,7 +122,7 @@ function RegisterForm() {
 
     console.log("Dados validados:", formData);
     try {
-      const response = await fetch("http://localhost:3000/rest/v1/cadastro", {
+      const response = await fetch("http://localhost:3000/rest/v1/register", {
         method: "POST",
         headers: { 
           "Content-Type": "application/json" 
@@ -129,22 +133,19 @@ function RegisterForm() {
           data_nascimento: formData.data_nascimento,
           email: formData.email,
           senha: formData.senha,
-          tipo: formData.tipo,
+          //tipo: formData.tipo,
         }),
       })
+      const dados = await response.json()
+      console.log("Status:", dados.status)
+      console.log("Resposta do servidor:", dados)
       if (!response.ok) {
-        const errorData = await response.json()
-        console.log("Status:", errorData.status)
-        console.log("Resposta do servidor:", errorData)
-        throw new Error(errorData.message || "Erro ao registrar")
+        throw new Error(dados.message || "Erro ao registrar")
       }
       alert("Usuário registrado com sucesso!")
-      setFormData({
-        nome_completo: "",
-        email: "",
-        senha: "",
-        confirmPassword: "",
-      })
+      const token = response.token;
+      localStorage.setItem('token', token);
+      navigate("/painel");
     } catch (err) {
       alert(err.message)
     }
@@ -170,7 +171,9 @@ function RegisterForm() {
       </div>
 
       <h1 className="text-2xl font-semibold mb-6 text-white">Crie sua conta</h1>
+
       <FooterLinks/>
+
       <form onSubmit={handleSubmit} className="w-full">
         <div className="mb-3 relative">
           <label className="block text-left text-[15px] mb-0.5" htmlFor="nome_completo">Nome</label>
