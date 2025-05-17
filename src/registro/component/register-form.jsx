@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { Eye, EyeOff } from "lucide-react"
-
+import FooterLinks from "./footerLinks";
 
 function RegisterForm() {
   const [formData, setFormData] = useState({
@@ -170,7 +170,7 @@ function RegisterForm() {
       </div>
 
       <h1 className="text-2xl font-semibold mb-6 text-white">Crie sua conta</h1>
-
+      <FooterLinks/>
       <form onSubmit={handleSubmit} className="w-full">
         <div className="mb-3 relative">
           <label className="block text-left text-[15px] mb-0.5" htmlFor="nome_completo">Nome</label>
