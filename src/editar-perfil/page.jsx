@@ -5,6 +5,7 @@ import Footer from "../components/footer";
 
 
 export default function PgEditLoginAdm() {
+  const token = localStorage.getItem('token'); //TOKEN DE ACESSO
   const [cnpj] = useState("");
   const [nome_fantasia, setNome_fantasia] = useState("");
   const [email, setEmail] = useState("");

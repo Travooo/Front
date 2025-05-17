@@ -3,6 +3,7 @@ import { Pencil, Trash2 } from "lucide-react"
 import React from "react"
 
 const LocalCard = ({ local, onExcluir }) => {
+  const token = localStorage.getItem('token'); //TOKEN DE ACESSO
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden">
       <div className="flex p-4">

@@ -7,6 +7,7 @@ import ReviewChart from "./components/reviewChart";
 import Notifications from "./components/notifications";
 
 export default function Dashboard() {
+  const token = localStorage.getItem('token'); //TOKEN DE ACESSO
   return (
     <div>
       <Header />

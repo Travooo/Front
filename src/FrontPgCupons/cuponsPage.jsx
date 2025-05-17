@@ -6,6 +6,7 @@ import CouponList from "./components/couponList";
 
 
 const CuponsPage = () => {
+  const token = localStorage.getItem('token'); //TOKEN DE ACESSO
   const [coupons, setCoupons] = useState([
     { id: 1, name: "Promoção Verão", discount: 10, expiration: "2024-07-31", enabled: true },
     { id: 2, name: "Desconto Natal", discount: 20, expiration: "2024-12-25", enabled: false },

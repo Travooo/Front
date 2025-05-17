@@ -6,6 +6,7 @@ import Header from "../components/header"
 import Footer from "../components/footer"
 
 export default function CadastrarLocal() {
+  const token = localStorage.getItem('token'); //TOKEN DE ACESSO
   const [imagemPreview, setImagemPreview] = useState(null)
   const [menuPreview, setMenuPreview] = useState(null)
   const [cupomAtivo, setCupomAtivo] = useState(false)

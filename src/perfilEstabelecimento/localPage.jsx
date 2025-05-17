@@ -6,6 +6,7 @@ import CouponCards from "./components/couponCards";
 import FooterLinks from "./components/footerLinks";
 
 export default function LocalPage() {
+  const token = localStorage.getItem('token'); //TOKEN DE ACESSO
   return (
     <div className="bg-white min-h-screen">
       <Header />

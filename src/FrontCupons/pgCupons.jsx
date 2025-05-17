@@ -2,6 +2,7 @@ import React from 'react';
 import Header from '../home/components/header';
 
 function PgCupons() {
+  const token = localStorage.getItem('token'); //TOKEN DE ACESSO
   const cupons = [
     {
       id: '1',

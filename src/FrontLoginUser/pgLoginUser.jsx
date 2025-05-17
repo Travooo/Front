@@ -7,10 +7,10 @@ export default function LoginForm() {
   const [senha, setPassword] = useState("");
   const navigate = useNavigate(); // Criando a função de navegação
   console.log('email', email);
-  console.log('senha' , senha);
+  console.log('senha', senha);
   const handleLogin = async (event) => {
     event.preventDefault();
-  
+
     try {
       const resposta = await fetch("http://localhost:3000/rest/v1/usuario/login", {
         method: "POST",
@@ -22,12 +22,16 @@ export default function LoginForm() {
           senha: senha,
         }),
       });
-  
+
       const dados = await resposta.json();
-  
+
       if (resposta.ok) {
-        alert("Login bem-sucedido!");
-        navigate("/painel"); // Navegando para a página de painel após o login
+        if (resposta.ok) {
+          const token = dados.token;
+          localStorage.setItem('token', token); // SALVA O TOKEN
+          alert("Login bem-sucedido!");
+          navigate("/painel");
+        }
       } else {
         alert(dados.mensagem || "Email ou senha incorretos!");
       }
@@ -36,7 +40,7 @@ export default function LoginForm() {
       alert("Erro no login. Tente novamente.");
     }
   };
-  
+
 
   return (
     <main className="flex justify-center items-center h-screen bg-cover bg-center text-white"
@@ -74,7 +78,7 @@ export default function LoginForm() {
             Login
           </button>
         </form>
-         <FooterLinks/>
+        <FooterLinks />
       </div>
     </main>
   );

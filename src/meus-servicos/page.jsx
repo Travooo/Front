@@ -28,6 +28,7 @@ const locaisIniciais = [
 ]
 
 const Servicos = () => {
+  const token = localStorage.getItem('token'); //TOKEN DE ACESSO
   const [locais, setLocais] = useState(locaisIniciais)
   const [termoBusca, setTermoBusca] = useState("")
   const navigate = useNavigate();

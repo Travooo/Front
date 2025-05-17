@@ -8,7 +8,7 @@ import Footer from "../components/footer";
 
 const Page = () => {
   const [selectedLocationId, setSelectedLocationId] = useState(null);
-
+  const token = localStorage.getItem('token'); //TOKEN DE ACESSO
   const handleLocationSelect = (locationId) => {
     setSelectedLocationId(locationId);
   };

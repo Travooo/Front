@@ -5,6 +5,7 @@ import Footer from "../components/footer"
 import { ArrowLeft, Save } from "lucide-react"
 
 export default function EditarServico() {
+  const token = localStorage.getItem('token'); //TOKEN DE ACESSO
   const { id } = useParams()
   const navigate = useNavigate()
 
