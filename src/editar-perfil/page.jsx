@@ -2,14 +2,26 @@ import React, { useState } from "react";
 import Header from "../components/header";
 import Footer from "../components/footer";
 
+
+
 export default function PgEditLoginAdm() {
+  const [cnpj] = useState("");
+  const [nome_fantasia, setNome_fantasia] = useState("");
+  const [email, setEmail] = useState("");
+  const [razao_social, setRazao_social] = useState("");
+  const [senha, setSenha] = useState("");
+  
   const [formData, setFormData] = useState({
-    name: "Maria Carvalho",
-    email: "maria@example.com",
-    password: "",
-    confirmPassword: "",
+    
+    cnpj: cnpj,
+    nome_fantasia: nome_fantasia,
+    email: email,
+    razao_social: razao_social,
+    senha: senha,
     image: "/imagens/pessoa.jpg"
   });
+
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -50,45 +62,56 @@ export default function PgEditLoginAdm() {
           {/* Campos do Formulário */}
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700">Nome</label>
+              <label className="block text-sm font-medium text-gray-700">CNPJ</label>
               <input
                 type="text"
-                name="name"
-                value={formData.name}
+                name="cnpj"
+                value={formData.cnpj}
                 onChange={handleChange}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">Email</label>
+              <label className="block text-sm font-medium text-gray-700">Nome</label>
+              <input
+                type="nome_fantasia"
+                name="nome_fantasia"
+                onChange={(e) => setNome_fantasia(e.target.value)}
+                value={formData.nome_fantasia}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700">E-mail</label>
               <input
                 type="email"
                 name="email"
                 value={formData.email}
-                onChange={handleChange}
+                onChange={(e) => setEmail(e.target.value)}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">Nova Senha</label>
+              <label className="block text-sm font-medium text-gray-700">Razão Social</label>
               <input
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
+                type="text"
+                name="razao_social"
+                value={formData.razao_social}
+                onChange={(e) => setRazao_social(e.target.value)}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">Confirmar Nova Senha</label>
+              <label className="block text-sm font-medium text-gray-700">Senha</label>
               <input
                 type="password"
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleChange}
+                name="senha"
+                value={formData.senha}
+                onChange={(e) => setSenha(e.target.value)}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
               />
             </div>
