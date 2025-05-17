@@ -8,7 +8,7 @@ const headerButtons = () => {
       <button className="hover:text-amber-500 transition-colors text-white">
         <Search className="h-6 w-6" />
       </button>
-      <Link to="/profile" className="hover:text-amber-500 transition-colors text-white">
+      <Link to="/editar-perfil" className="hover:text-amber-500 transition-colors text-white">
         <User className="h-6 w-6" />
       </Link>
     </div>
