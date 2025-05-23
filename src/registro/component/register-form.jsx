@@ -122,7 +122,7 @@ function RegisterForm() {
 
     console.log("Dados validados:", formData);
     try {
-      const response = await fetch("http://localhost:3000/rest/v1/register", {
+      const response = await fetch("http://localhost:3000/rest/v1/usuarios", {
         method: "POST",
         headers: { 
           "Content-Type": "application/json" 
