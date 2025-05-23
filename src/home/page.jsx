@@ -18,7 +18,7 @@ const Page = () => {
 
   
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-neutral-100">
       <Header />
       <div className="w-full bg-neutral-100 px-4 py-4">
       <div className="max-w-screen-xl mx-auto flex justify-center">

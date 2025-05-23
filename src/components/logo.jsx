@@ -1,8 +1,18 @@
-import React from "react";
+"use client"
+import { useNavigate } from "react-router-dom"
 
 const Logo = () => {
+  const navigate = useNavigate()
+
+  const handleLogoClick = () => {
+    navigate("/home")
+  }
+
   return (
-    <div className="flex absolute z-10 items-center top-[15px] left-[60px] text-4xl font-bold tracking-tighter text-orange-200 h-[50px]">
+    <div
+      onClick={handleLogoClick}
+      className="flex absolute z-10 items-center top-[15px] left-[60px] text-4xl font-bold tracking-tighter text-orange-200 h-[50px] cursor-pointer hover:opacity-90 transition-opacity"
+    >
       <h1 className="mr-1">
         <span style={{ color: "rgba(255,149,0,1)" }}>Travo</span>
       </h1>
@@ -12,7 +22,7 @@ const Logo = () => {
         className="object-contain w-[35px] h-[35px]"
       />
     </div>
-  );
-};
+  )
+}
 
-export default Logo;
+export default Logo
