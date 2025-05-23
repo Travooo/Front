@@ -20,6 +20,8 @@ function App() {
     <Router>
         <Routes>
           <Route path="/home" element={<HomePage />} />
+          <Route path="/loginUser" element={<LoginUser />} />
+          <Route path="/registerUser" element={<RegisterPage />} />
           <Route path="/login" element={<LoginUser />} />
           <Route path="/painel" element={<Dashboard />} />
           <Route path="/editar-perfil" element={<PgEditLoginAdm />} />
@@ -28,7 +30,6 @@ function App() {
           <Route path="/cadastrar-local" element={<CadastrarLocal />} />
           <Route path="/meus-cupons" element={<CuponsPage />} />
           <Route path="/perfil-estabelecimento" element={<PerfilEstabelecimento />} />
-          <Route path="/registro" element={<RegisterPage />} />
         </Routes>
     </Router>
   );
