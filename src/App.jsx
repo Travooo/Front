@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import HomePage from './home/page';
-import LoginUser from './FrontLoginUser/pgLoginUser';
+import LoginUser from './login/pgLoginUser';
 import Dashboard from './painel/page';
 import PgEditLoginAdm from './editar-perfil/page';
 import Servicos from './meus-servicos/page';
@@ -20,7 +20,7 @@ function App() {
     <Router>
         <Routes>
           <Route path="/home" element={<HomePage />} />
-          <Route path="/loginUser" element={<LoginUser />} />
+          <Route path="/login" element={<LoginUser />} />
           <Route path="/painel" element={<Dashboard />} />
           <Route path="/editar-perfil" element={<PgEditLoginAdm />} />
           <Route path="/meus-servicos" element={<Servicos />} />

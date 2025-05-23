@@ -3,9 +3,8 @@
 import { useState } from "react"
 import Header from "../components/header"
 import Footer from "../components/footer"
-import { Pencil, Trash2, Search, Plus } from "lucide-react"
-import React from "react"
-import { useNavigate } from 'react-router-dom';
+import { Pencil, Trash2, Search, Plus, Filter } from "lucide-react"
+import { useNavigate } from "react-router-dom"
 
 const locaisIniciais = [
   {
@@ -28,10 +27,10 @@ const locaisIniciais = [
 ]
 
 const Servicos = () => {
-  const token = localStorage.getItem('token'); //TOKEN DE ACESSO
+  const token = localStorage.getItem("token") //TOKEN DE ACESSO
   const [locais, setLocais] = useState(locaisIniciais)
   const [termoBusca, setTermoBusca] = useState("")
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   const locaisFiltrados = locais.filter(
     (local) =>
@@ -49,11 +48,14 @@ const Servicos = () => {
     <div className="flex flex-col min-h-screen bg-gray-100">
       <Header />
 
-      <main className="flex-1 max-w-screen-xl mx-auto w-full px-4 py-6">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">Locais</h1>
+      {/* Aumentei o espaçamento vertical com py-12 e adicionei mb-20 para afastar do footer */}
+      <main className="flex-1 max-w-screen-xl mx-auto w-full px-6 py-12 mb-20">
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-800">Locais</h1>
         </div>
-        <div className="flex flex-col sm:flex-row gap-4 mb-8">
+
+        {/* Aumentei o espaçamento inferior com mb-10 */}
+        <div className="flex flex-col sm:flex-row gap-4 mb-10">
           <div className="relative flex-grow">
             <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
               <Search className="h-5 w-5 text-gray-400" />
@@ -61,43 +63,52 @@ const Servicos = () => {
             <input
               type="text"
               placeholder="Pesquisar locais..."
-              className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500"
+              className="pl-10 pr-4 py-3 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500"
               value={termoBusca}
               onChange={(e) => setTermoBusca(e.target.value)}
             />
           </div>
-          <div className="flex gap-2">
-          <button
-            onClick={() => navigate('/cadastrar-local')}
-            className="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-md flex items-center gap-2 transition-colors"
-          >
-            <Plus className="h-5 w-5" />
-            <span>Add Local</span>
-          </button>
-          
-            <button className="border border-gray-300 bg-white hover:bg-gray-50 px-4 py-2 rounded-md transition-colors">
-              Filtros
+          <div className="flex gap-3">
+            <button
+              onClick={() => navigate("/cadastrar-local")}
+              className="bg-amber-500 hover:bg-amber-600 text-white px-5 py-3 rounded-md flex items-center gap-2 transition-colors font-medium"
+            >
+              <Plus className="h-5 w-5" />
+              <span>Add Local</span>
+            </button>
+
+            <button className="border border-gray-300 bg-white hover:bg-gray-50 px-5 py-3 rounded-md transition-colors flex items-center gap-2">
+              <Filter className="h-5 w-5 text-gray-500" />
+              <span>Filtros</span>
             </button>
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+        {/* Aumentei o gap para 6 e adicionei padding-bottom para afastar do footer */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-8">
           {locaisFiltrados.map((local) => (
-            <div key={local.id} className="bg-white rounded-lg shadow-md overflow-hidden">
+            <div
+              key={local.id}
+              className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+            >
               <div className="flex p-4">
                 <img
-                  src={local.imagem || "/placeholder.svg"}
+                  src={local.imagem || "/placeholder.svg?height=100&width=100"}
                   alt={local.nome}
-                  className="w-20 h-20 object-cover rounded-md mr-4"
+                  className="w-16 h-16 object-cover rounded-md mr-4"
                 />
                 <div className="flex-1">
                   <div className="flex justify-between">
-                    <h2 className="text-xl font-semibold">{local.nome}</h2>
-                    <div className="flex gap-2">
-                      <button className="text-gray-500 hover:text-amber-500 transition-colors" aria-label="Editar">
+                    <h2 className="text-lg font-semibold text-gray-800">{local.nome}</h2>
+                    <div className="flex gap-3">
+                      <button
+                        className="text-gray-500 hover:text-amber-500 transition-colors p-1 rounded-full hover:bg-amber-50"
+                        aria-label="Editar"
+                      >
                         <Pencil className="h-5 w-5" />
                       </button>
                       <button
-                        className="text-gray-500 hover:text-red-500 transition-colors"
+                        className="text-gray-500 hover:text-red-500 transition-colors p-1 rounded-full hover:bg-red-50"
                         onClick={() => excluirLocal(local.id)}
                         aria-label="Excluir"
                       >
@@ -105,22 +116,34 @@ const Servicos = () => {
                       </button>
                     </div>
                   </div>
-                  <p className="text-gray-600 mt-1">{local.endereco}</p>
+                  <p className="text-gray-600 mt-2">{local.endereco}</p>
+
+                  {/* Adicionei botão de detalhes para melhorar a usabilidade */}
+                  <button
+                    className="mt-4 text-amber-600 hover:text-amber-700 text-sm font-medium"
+                    onClick={() => navigate(`/local/${local.id}`)}
+                  >
+                    Ver detalhes
+                  </button>
                 </div>
               </div>
             </div>
           ))}
         </div>
+
         {locaisFiltrados.length === 0 && (
-          <div className="text-center py-12">
+          <div className="text-center py-16 bg-white rounded-lg shadow-sm my-8">
             <p className="text-gray-500 text-lg">Nenhum local encontrado.</p>
+            <button onClick={() => setTermoBusca("")} className="mt-4 text-amber-600 hover:text-amber-700">
+              Limpar busca
+            </button>
           </div>
         )}
       </main>
+
       <Footer />
     </div>
   )
 }
 
-export default Servicos;
-
+export default Servicos
