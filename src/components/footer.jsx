@@ -6,7 +6,6 @@ const Footer = () => {
     <footer className="relative bg-stone-900 text-white py-4 px-6 z-10">
       <div className="container mx-auto">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
-          {/* Logo e descrição */}
           <div className="flex flex-col lg:flex-row items-center gap-4">
             <div className="flex items-center">
               <div className="bg-amber-500 rounded-full w-8 h-8 flex items-center justify-center mr-2">
@@ -19,7 +18,6 @@ const Footer = () => {
             </p>
           </div>
 
-          {/* Informações de contato em linha */}
           <div className="flex flex-col sm:flex-row items-center gap-4 text-sm">
             <div className="flex items-center gap-2">
               <MapPin className="w-4 h-4 text-amber-500" />
@@ -34,8 +32,6 @@ const Footer = () => {
               <span className="text-gray-400">contato@travo.com</span>
             </div>
           </div>
-
-          {/* Redes sociais */}
           <div className="flex items-center space-x-4">
             <Link href="#" className="text-gray-400 hover:text-amber-500 transition-colors">
               <Facebook className="w-5 h-5" />
@@ -48,8 +44,6 @@ const Footer = () => {
             </Link>
           </div>
         </div>
-
-        {/* Copyright */}
         <div className="border-t border-gray-800 mt-4 pt-4 text-center text-gray-400 text-sm">
           <p>&copy; {new Date().getFullYear()} Travo. Todos os direitos reservados.</p>
         </div>

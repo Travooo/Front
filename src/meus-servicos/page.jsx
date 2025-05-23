@@ -47,14 +47,10 @@ const Servicos = () => {
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
       <Header />
-
-      {/* Aumentei o espaçamento vertical com py-12 e adicionei mb-20 para afastar do footer */}
       <main className="flex-1 max-w-screen-xl mx-auto w-full px-6 py-12 mb-20">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-gray-800">Locais</h1>
         </div>
-
-        {/* Aumentei o espaçamento inferior com mb-10 */}
         <div className="flex flex-col sm:flex-row gap-4 mb-10">
           <div className="relative flex-grow">
             <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
@@ -83,8 +79,6 @@ const Servicos = () => {
             </button>
           </div>
         </div>
-
-        {/* Aumentei o gap para 6 e adicionei padding-bottom para afastar do footer */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-8">
           {locaisFiltrados.map((local) => (
             <div
@@ -117,8 +111,6 @@ const Servicos = () => {
                     </div>
                   </div>
                   <p className="text-gray-600 mt-2">{local.endereco}</p>
-
-                  {/* Adicionei botão de detalhes para melhorar a usabilidade */}
                   <button
                     className="mt-4 text-amber-600 hover:text-amber-700 text-sm font-medium"
                     onClick={() => navigate(`/local/${local.id}`)}
@@ -140,7 +132,6 @@ const Servicos = () => {
           </div>
         )}
       </main>
-
       <Footer />
     </div>
   )
