@@ -4,7 +4,7 @@ import React from "react";
 const FooterLinks = () => {
   return (
     <section className="space-y-2 text-base text-white-700 font-semibold mt-10">
-      <p><Link to="/registro" className="text-white-600">Registrar?</Link></p>
+      <p><Link to="/registerUser" className="text-white-600">Registrar?</Link></p>
     
     </section>
   );
