@@ -143,9 +143,7 @@ function RegisterForm() {
         throw new Error(dados.message || "Erro ao registrar")
       }
       alert("Usuário registrado com sucesso!")
-      //const token = response.token;
-      //localStorage.setItem('token', token);
-      navigate("/painel");
+      navigate("/login");
     } catch (err) {
       alert(err.message)
     }
