@@ -143,7 +143,7 @@ function RegisterForm() {
         throw new Error(dados.message || "Erro ao registrar")
       }
       alert("Usuário registrado com sucesso!")
-      navigate("/login");
+      navigate("/loginUser");
     } catch (err) {
       alert(err.message)
     }
