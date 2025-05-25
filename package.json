@@ -10,8 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.49.8",
     "chart.js": "^4.4.8",
     "framer-motion": "^12.5.0",
+    "jwt-decode": "^4.0.0",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.487.0",
     "react": "^19.0.0",

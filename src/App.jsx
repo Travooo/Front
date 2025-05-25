@@ -8,17 +8,16 @@ import Servicos from './meus-servicos/page';
 import PgCupons from './FrontCupons/pgCupons';
 import PerfilEstabelecimento from './perfilEstabelecimento/localPage';
 import EditarServico from './editar-servico/EditarServico';
-
 import CadastrarLocal from './cadastrar-local/page';
 import CuponsPage from './FrontPgCupons/cuponsPage';
 import RegisterPage from './registro/page';
 import './styles/tailwind.css';
-
-
+import { UserProvider } from './context/UserContext';
 
 function App() {
   return (
-    <Router>
+    <UserProvider>
+      <Router>
         <Routes>
           <Route path="/home" element={<HomePage />} />
           <Route path="/loginUser" element={<LoginUser />} />
@@ -33,7 +32,8 @@ function App() {
           <Route path="/perfil-estabelecimento" element={<PerfilEstabelecimento />} />
           <Route path="/editar-servico" element={<EditarServico />} />
         </Routes>
-    </Router>
+      </Router>
+    </UserProvider>
   );
 }
 

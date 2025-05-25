@@ -1,18 +1,56 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { supabase } from "../../config/supabaseClient";
+import { useUser } from "../../context/UserContext";
 
 const LocalInfo = () => {
+  const [servico, setServico] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const { userId } = useUser();
+
+  useEffect(() => {
+    const fetchServico = async () => {
+      try {
+        if (!userId) {
+          throw new Error("Usuário não está logado");
+        }
+
+        // Buscar o serviço associado ao usuário
+        const { data, error } = await supabase
+          .from('servicos')
+          .select('*')
+          .eq('usuario_organizacao_id', userId)
+          .single();
+
+        if (error) throw error;
+        
+        setServico(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchServico();
+  }, [userId]);
+
+  if (loading) return <div>Carregando...</div>;
+  if (error) return <div>Erro: {error}</div>;
+  if (!servico) return <div>Nenhum serviço encontrado</div>;
+
   return (
     <section className="flex flex-col lg:flex-row gap-6">
       <div className="flex-1 space-y-4">
-        <h1 className="text-3xl font-bold">Illa Mare</h1>
+        <h1 className="text-3xl font-bold">{servico.nome}</h1>
         <p className="text-red-600 font-semibold">Informações</p>
 
-        <p><strong>Localização:</strong> Av. Beira Mar, 3821 – Meireles, Fortaleza - CE, 60165-121</p>
+        <p><strong>Localização:</strong> {servico.cep}</p>
 
-        <p><strong>Descrição :</strong> Com 13 anos no mercado, o Barney’s manteve-se como a preferência dos clientes e conquistou a reputação de ser a hamburgueria mais popular de Fortaleza...</p>
+        <p><strong>Descrição:</strong> {servico.sobre}</p>
 
         <p className="text-sm text-gray-700">
-          <strong>Horário de Funcionamento:</strong> 18h às 23h
+          <strong>Horário de Funcionamento:</strong> {servico.horarios}
         </p>
 
         <p className="text-sm text-gray-700">
