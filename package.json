@@ -10,7 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+<<<<<<< HEAD
     "@supabase/supabase-js": "^2.49.8",
+=======
+    "axios": "^1.9.0",
+>>>>>>> bb41f9b8a92a3c4270837621298d269a24aea0cb
     "chart.js": "^4.4.8",
     "framer-motion": "^12.5.0",
     "jwt-decode": "^4.0.0",
