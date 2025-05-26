@@ -22,7 +22,6 @@ function App() {
           <Route path="/home" element={<HomePage />} />
           <Route path="/loginUser" element={<LoginUser />} />
           <Route path="/registerUser" element={<RegisterPage />} />
-          <Route path="/login" element={<LoginUser />} />
           <Route path="/painel" element={<Dashboard />} />
           <Route path="/editar-perfil" element={<PgEditLoginAdm />} />
           <Route path="/meus-servicos" element={<Servicos />} />
