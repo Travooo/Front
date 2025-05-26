@@ -1,48 +1,77 @@
   "use client"
 
-  import { useState } from "react"
+  import { useState, useEffect } from "react"
+  import axios from "axios";
   import Header from "../components/header"
   import Footer from "../components/footer"
+  import LocalCard from "./localCard.jsx";
+
   import { Pencil, Trash2, Search, Plus, Filter } from "lucide-react"
   import { useNavigate } from "react-router-dom"
 
-  const locaisIniciais = [
-    {
-      id: 1,
-      nome: "Illa Mare",
-      endereco: "Av. Beira Mar, 3821 - Meireles, Fortaleza - CE, 60165-121",
-      imagem: "/placeholder.svg?height=80&width=80",
-    },
-    {
-      id: 2,
-      nome: "Illa Mare",
-      endereco: "Av. Beira Mar, 3821 - Meireles, Fortaleza - CE, 60165-121",
-    },
-    {
-      id: 3,
-      nome: "Illa Mare",
-      endereco: "Av. Beira Mar, 3821 - Meireles, Fortaleza - CE, 60165-121",
-      imagem: "/placeholder.svg?height=80&width=80",
-    },
-  ]
 
   const Servicos = () => {
     const token = localStorage.getItem("token") //TOKEN DE ACESSO
-    const [locais, setLocais] = useState(locaisIniciais)
+    const [locais, setLocais] = useState([])
+    const [tipoFiltro, setTipoFiltro] = useState("");
     const [termoBusca, setTermoBusca] = useState("")
     const navigate = useNavigate()
 
+    useEffect(() => {
+      const fetchLocaisComImagem = async () => {
+        try {
+          // 1) Busca todos os serviços ou filtrados por tipo:
+          const urlServicos = tipoFiltro
+            ? `http://localhost:3000/rest/v1/servicos/tipo/${tipoFiltro}`
+            : "http://localhost:3000/rest/v1/servicos";
+
+          const response = await axios.get(urlServicos, {
+            headers: { "Content-Type": "application/json" },
+          });
+          const data = response.data;
+
+          // 2) Busca a foto de perfil de cada serviço:
+          const servicos = await Promise.all(
+            data.map(async (item) => {
+            try {
+              const { data: anexo } = await axios.get(`http://localhost:3000/rest/v1/anexos/perfil/servicos/${item.id}`, {
+                headers: { 
+                  "Content-Type": "application/json" 
+                }
+              });
+              return { 
+                ...item, 
+                imagem: anexo?.url_publica || "/placeholder.svg?height=100&width=100", 
+              };
+            } catch {
+              return { 
+                ...item, 
+                imagem: "/placeholder.svg?height=100&width=100" };
+            };
+          })
+        );
+        setLocais(servicos);
+        } catch (error) {
+          console.error("Erro ao buscar serviços com imagem:", error);
+        }
+      };
+      fetchLocaisComImagem();
+    }, [tipoFiltro, token]);
+
+    // Filtra locais por termo de busca (nome ou endereço)
     const locaisFiltrados = locais.filter(
       (local) =>
         local.nome.toLowerCase().includes(termoBusca.toLowerCase()) ||
-        local.endereco.toLowerCase().includes(termoBusca.toLowerCase()),
+        (local.endereco || "")
+        .toLowerCase()
+        .includes(termoBusca.toLowerCase())
     )
 
     const excluirLocal = (id) => {
       if (window.confirm("Tem certeza que deseja excluir este local?")) {
         setLocais(locais.filter((local) => local.id !== id))
       }
-    }
+    } 
 
     return (
       <div className="flex flex-col min-h-screen bg-gray-100">
@@ -73,64 +102,39 @@
                 <span>Add Local</span>
               </button>
 
-              <button className="border border-gray-300 bg-white hover:bg-gray-50 px-5 py-3 rounded-md transition-colors flex items-center gap-2">
+              <select
+                value={tipoFiltro}
+                onChange={(e) => setTipoFiltro(e.target.value)}
+                className="border border-gray-300 bg-white hover:bg-gray-50 px-5 py-3 rounded-md transition-colors"
+              >
+                <option value="">Todos os tipos</option>
+                <option value="restaurant">Restaurantes</option>
+                <option value="park">Parques</option>
+                <option value="shopping">Shoppings</option>
+
+                {/* 
+                <button className="border border-gray-300 bg-white hover:bg-gray-50 px-5 py-3 rounded-md transition-colors flex items-center gap-2">
                 <Filter className="h-5 w-5 text-gray-500" />
-                <span>Filtros</span>
-              </button>
+                <span>Filtros</span> 
+                */}
+              </select>
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-8">
             {locaisFiltrados.map((local) => (
-              <div
-                key={local.id}
-                className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
-              >
-                <div className="flex p-4">
-                  <img
-                    src={local.imagem || "/placeholder.svg?height=100&width=100"}
-                    alt={local.nome}
-                    className="w-16 h-16 object-cover rounded-md mr-4"
-                  />
-                  <div className="flex-1">
-                    <div className="flex justify-between">
-                      <h2 className="text-lg font-semibold text-gray-800">{local.nome}</h2>
-                      <div className="flex gap-3">
-                        <button
-                          className="text-gray-500 hover:text-amber-500 transition-colors p-1 rounded-full hover:bg-amber-50"
-                          aria-label="Editar"
-                        >
-                          <Pencil className="h-5 w-5" />
-                        </button>
-                        <button
-                          className="text-gray-500 hover:text-red-500 transition-colors p-1 rounded-full hover:bg-red-50"
-                          onClick={() => excluirLocal(local.id)}
-                          aria-label="Excluir"
-                        >
-                          <Trash2 className="h-5 w-5" />
-                        </button>
-                      </div>
-                    </div>
-                    <p className="text-gray-600 mt-2">{local.endereco}</p>
-                    <button
-                      className="mt-4 text-amber-600 hover:text-amber-700 text-sm font-medium"
-                      onClick={() => navigate(`/local/${local.id}`)}
-                    >
-                      Ver detalhes
-                    </button>
-                  </div>
-                </div>
-              </div>
+               <LocalCard key={local.id} local={local} onExcluir={excluirLocal} />
             ))}
-          </div>
-
-          {locaisFiltrados.length === 0 && (
+            {locaisFiltrados.length === 0 && (
             <div className="text-center py-16 bg-white rounded-lg shadow-sm my-8">
               <p className="text-gray-500 text-lg">Nenhum local encontrado.</p>
-              <button onClick={() => setTermoBusca("")} className="mt-4 text-amber-600 hover:text-amber-700">
+              <button 
+                onClick={() => setTermoBusca("")} 
+                className="mt-4 text-amber-600 hover:text-amber-700">
                 Limpar busca
               </button>
             </div>
-          )}
+            )}
+          </div>
         </main>
         <Footer />
       </div>
