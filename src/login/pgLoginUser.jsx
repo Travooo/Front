@@ -3,12 +3,14 @@ import { useNavigate } from "react-router-dom"; // Importando o hook de navegaç
 import FooterLinks from "./components/footerLinks"
 
 export default function LoginForm() {
+  const [loginError, setLoginError] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setPassword] = useState("");
   const navigate = useNavigate(); // Criando a função de navegação
   console.log('email', email);
   console.log('senha', senha);
   const handleLogin = async (event) => {
+    setLoginError("");
     event.preventDefault();
 
     try {
@@ -33,11 +35,11 @@ export default function LoginForm() {
           navigate("/painel");
         }
       } else {
-        alert(dados.mensagem || "Email ou senha incorretos!");
+        setLoginError(dados.mensagem || "Email ou senha incorretos!");
       }
     } catch (error) {
       console.error("Erro na requisição:", error);
-      alert("Erro no login. Tente novamente.");
+      setLoginError(dados.mensagem || "Erro no login. Tente novamente.");
     }
   };
 
@@ -74,6 +76,11 @@ export default function LoginForm() {
             <input type="checkbox" id="remember" className="mr-2" />
             <label htmlFor="remember">Lembrar-me</label>
           </div>
+          {loginError && (
+            <div className="mb-3 text-sm text-red-400 text-left">
+              {loginError}
+            </div>
+          )}
           <button type="submit" className="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-2 rounded">
             Login
           </button>
