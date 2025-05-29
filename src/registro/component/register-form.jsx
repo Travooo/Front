@@ -6,6 +6,7 @@ import FooterLinks from "./footerLinks";
 
 
 function RegisterForm() {
+  const [backendErrors, setBackendErrors] = useState([]);
   const [formData, setFormData] = useState({
     nome_completo: "",
     nome_usuario: "",
@@ -22,8 +23,8 @@ function RegisterForm() {
   const [errorEmail, setErrorEmail] = useState("");
   const navigate = useNavigate();
   //const tipos = [
-    //{ label: 'Usuário', value: 'usuario' },
-    //{ label: 'Estabelecimento', value: 'servico' }
+  //{ label: 'Usuário', value: 'usuario' },
+  //{ label: 'Estabelecimento', value: 'servico' }
   //];
 
   const handleChange = (e) => {
@@ -60,10 +61,10 @@ function RegisterForm() {
       } else {
         setErrorEmail("Email inválido.");
       }
-    //} else if (name === "tipo") {
+      //} else if (name === "tipo") {
       //setFormData((prev) => ({
-        //...prev,
-        //tipo: value
+      //...prev,
+      //tipo: value
       //}));
       //return;
     } else {
@@ -96,6 +97,7 @@ function RegisterForm() {
   };
 
   const handleSubmit = async (e) => {
+    setBackendErrors([]);
     e.preventDefault()
 
     if (!formData.nome_completo || !formData.nome_usuario || !formData.data_nascimento || !formData.email || !formData.senha || !formData.confirmPassword /* || !formData.tipo */) {
@@ -124,8 +126,8 @@ function RegisterForm() {
     try {
       const response = await fetch("http://localhost:3000/rest/v1/usuarios", {
         method: "POST",
-        headers: { 
-          "Content-Type": "application/json" 
+        headers: {
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({
           nome_completo: formData.nome_completo,
@@ -140,8 +142,14 @@ function RegisterForm() {
       console.log("Status:", dados.status)
       console.log("Resposta do servidor:", dados)
       if (!response.ok) {
-        throw new Error(dados.message || "Erro ao registrar")
+        if (dados.errors) {
+          setBackendErrors(dados.errors);
+        } else {
+          setBackendErrors([dados.mensagem || "Erro ao registrar"]);
+        }
+        return;
       }
+
       alert("Usuário registrado com sucesso!")
       navigate("/loginUser");
     } catch (err) {
@@ -170,7 +178,7 @@ function RegisterForm() {
 
       <h1 className="text-2xl font-semibold mb-6 text-white">Crie sua conta</h1>
 
-      <FooterLinks/>
+      <FooterLinks />
 
       <form onSubmit={handleSubmit} className="w-full">
         <div className="mb-3 relative">
@@ -182,7 +190,7 @@ function RegisterForm() {
               name="nome_completo"
               value={formData.nome_completo}
               onChange={handleChange}
-              className= { inputStyle }
+              className={inputStyle}
               placeholder=" "
               required
             />
@@ -190,7 +198,7 @@ function RegisterForm() {
               htmlFor="nome_completo"
               className={inputLabelStyle}
             >
-            Digite seu nome completo
+              Digite seu nome completo
             </label>
           </div>
         </div>
@@ -204,7 +212,7 @@ function RegisterForm() {
               name="nome_usuario"
               value={formData.nome_usuario}
               onChange={handleChange}
-              className= { inputStyle }
+              className={inputStyle}
               placeholder=" "
               required
             />
@@ -226,7 +234,7 @@ function RegisterForm() {
               name="data_nascimento"
               value={formData.data_nascimento}
               onChange={handleChange}
-              className= { `${inputStyle} ${errorDataNascimento ? 'border-red-500' : ''}` }
+              className={`${inputStyle} ${errorDataNascimento ? 'border-red-500' : ''}`}
               maxLength={10}
               placeholder=" "
               required
@@ -249,8 +257,8 @@ function RegisterForm() {
               id="email"
               name="email"
               value={formData.email}
-              onChange={handleChange} 
-              className= {`${inputStyle} ${errorEmail ? 'border-red-500' : ''}`}
+              onChange={handleChange}
+              className={`${inputStyle} ${errorEmail ? 'border-red-500' : ''}`}
               placeholder=" "
               required
             />
@@ -272,7 +280,7 @@ function RegisterForm() {
               name="senha"
               value={formData.senha}
               onChange={handleChange}
-              className= { inputStyle }
+              className={inputStyle}
               placeholder=" "
               required
             />
@@ -298,7 +306,7 @@ function RegisterForm() {
               name="confirmPassword"
               value={formData.confirmPassword}
               onChange={handleChange}
-              className= { inputStyle }
+              className={inputStyle}
               placeholder=""
               required
             />
@@ -321,6 +329,15 @@ function RegisterForm() {
             </button>
           </div>
         </div>
+        {backendErrors.length > 0 && (
+          <div className="mb-4 text-left text-sm text-red-400">
+            <ul className="list-disc list-inside">
+              {backendErrors.map((erro, idx) => (
+                <li key={idx}>{erro}</li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         <button
           type="submit"
@@ -328,7 +345,7 @@ function RegisterForm() {
         >
           Registrar
         </button>
-      </form> 
+      </form>
     </div>
   )
 }
