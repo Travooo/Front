@@ -16,7 +16,7 @@ export default function LoginForm() {
     setError("");
 
     try {
-      const response = await fetch("http://localhost:3000/authsOrg/login", {
+      const response = await fetch("http://localhost:3000/rest/v1/usuariosOrg/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -36,11 +36,11 @@ export default function LoginForm() {
         alert("Login bem-sucedido!");
         navigate("/painel");
       } else {
-        alert(dados.mensagem || "Email ou senha incorretos!");
+        setLoginError(data.mensagem || "Email ou senha incorretos!");
       }
     } catch (error) {
       console.error("Erro na requisição:", error);
-      alert("Erro no login. Tente novamente.");
+      setLoginError(data.mensagem || "Email ou senha incorretos!");
     }
   };
 

@@ -8,69 +8,90 @@ import CouponList from "./components/couponList";
 const CuponsPage = () => {
   const token = localStorage.getItem('token'); //TOKEN DE ACESSO
   const [coupons, setCoupons] = useState([
-    { id: 1, name: "Promoção Verão", discount: 10, expiration: "2024-07-31", enabled: true },
-    { id: 2, name: "Desconto Natal", discount: 20, expiration: "2024-12-25", enabled: false },
+    { id: 1, name: "Promoção Verão", discount: "10", expiration: "2024-07-31", enabled: true },
+    { id: 2, name: "Desconto Natal", discount: "20", expiration: "2024-12-25", enabled: false },
   ]);
+
+  function getUserIdFromToken(token) {
+    try {
+      const payloadBase64 = token.split('.')[1];
+      const payloadJson = atob(payloadBase64); // Decodifica Base64
+      const payload = JSON.parse(payloadJson);
+      return payload.id;
+    } catch (err) {
+      console.error("Token inválido:", err);
+      return null;
+    }
+  }
+
   const handleSaveCoupon = async (newCoupon) => {
+    const userId = getUserIdFromToken(token);
+    if (!userId) {
+      console.error("Usuário não autenticado.");
+      return;
+    }
+
     try {
       if (newCoupon.id) {
         const response = await fetch(`http://localhost:3000/rest/v1/cupons/${newCoupon.id}`, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
           },
           body: JSON.stringify({
+            nome: newCoupon.name,
             estabelecimento_id: newCoupon.estabelecimento_id,
-            usuario_id: newCoupon.usuario_id,
-            descricao: newCoupon.discount,
+            usuario_id: userId,
+            descricao: newCoupon.descricao,
             expiration: newCoupon.expiration,
-            created_at: newCoupon.created_at || new Date().toISOString()
           }),
         });
-  
+
         if (!response.ok) {
           const errorData = await response.json();
           console.error("Erro ao editar cupom:", errorData);
           return;
         }
-  
+
         const updatedCupom = await response.json();
         setCoupons(coupons.map(c => (c.id === newCoupon.id ? updatedCupom : c)));
-  
+
         console.log("Cupom editado no backend:", updatedCupom);
-  
+
       } else {
         const response = await fetch("http://localhost:3000/rest/v1/cupons", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
           },
           body: JSON.stringify({
+            nome: newCoupon.name,
             estabelecimento_id: newCoupon.estabelecimento_id,
-            usuario_id: newCoupon.usuario_id,
-            descricao: newCoupon.discount,
+            usuario_id: userId,
+            descricao: newCoupon.descricao,
             expiration: newCoupon.expiration,
-            created_at: new Date().toISOString()
           }),
         });
-  
+
         if (!response.ok) {
           const errorData = await response.json();
           console.error("Erro ao salvar cupom:", errorData);
           return;
         }
-  
+
         const savedCupom = await response.json();
         setCoupons([...coupons, savedCupom]);
-  
+
         console.log("Cupom salvo no backend:", savedCupom);
       }
     } catch (error) {
       console.error("Erro na requisição:", error);
     }
   };
-  
-  
+
+
 
   const handleEditCoupon = (coupon) => {
     setEditingCoupon(coupon);
@@ -89,21 +110,21 @@ const CuponsPage = () => {
       <main className="flex flex-col md:flex-row p-6 gap-6">
         {/* Formulário de Cupom */}
         <div className="w-full md:w-1/2">
-          <CouponForm 
-            onSave={handleSaveCoupon} 
-            editingCoupon={editingCoupon} 
+          <CouponForm
+            onSave={handleSaveCoupon}
+            editingCoupon={editingCoupon}
             setEditingCoupon={setEditingCoupon}
           />
         </div>
 
         {/* Lista de Cupons */}
         <div className="w-full md:w-1/2">
-          <CouponList 
-            coupons={coupons} 
-            onEdit={handleEditCoupon} 
+          <CouponList
+            coupons={coupons}
+            onEdit={handleEditCoupon}
             onToggle={handleToggleCoupon}
           />
-        </div> 
+        </div>
       </main>
     </div>
   );

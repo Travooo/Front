@@ -11,10 +11,7 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.49.8",
-<<<<<<< HEAD
-=======
     "axios": "^1.9.0",
->>>>>>> fedb326566e261f0d77a9cc1c6e1e5351ac8b464
     "chart.js": "^4.4.8",
     "framer-motion": "^12.5.0",
     "jwt-decode": "^4.0.0",
