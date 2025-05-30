@@ -7,30 +7,18 @@ import CouponList from "./components/couponList";
 
 const CuponsPage = () => {
   const token = localStorage.getItem('token'); //TOKEN DE ACESSO
+  const userId = localStorage.getItem('organizacaoId'); //ID ORGANIZAÇÃO
   const [coupons, setCoupons] = useState([
     { id: 1, name: "Promoção Verão", discount: "10", expiration: "2024-07-31", enabled: true },
     { id: 2, name: "Desconto Natal", discount: "20", expiration: "2024-12-25", enabled: false },
   ]);
 
-  function getUserIdFromToken(token) {
-    try {
-      const payloadBase64 = token.split('.')[1];
-      const payloadJson = atob(payloadBase64); // Decodifica Base64
-      const payload = JSON.parse(payloadJson);
-      return payload.id;
-    } catch (err) {
-      console.error("Token inválido:", err);
-      return null;
-    }
-  }
-
   const handleSaveCoupon = async (newCoupon) => {
-    const userId = getUserIdFromToken(token);
     if (!userId) {
       console.error("Usuário não autenticado.");
       return;
     }
-
+    console.log(userId)
     try {
       if (newCoupon.id) {
         const response = await fetch(`http://localhost:3000/rest/v1/cupons/${newCoupon.id}`, {

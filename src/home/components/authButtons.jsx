@@ -10,7 +10,7 @@ const AuthButtons = () => {
       className="flex-1 p-2 bg-amber-500 rounded-lg border border-solid border-neutral-500 text-stone-900 hover:bg-amber-600 transition-colors">
         Logar
       </button>
-      <button onClick={() => navigate("/registro")} 
+      <button onClick={() => navigate("/registerUser")} 
       className="flex-1 p-2 bg-zinc-800 rounded-lg border border-solid border-zinc-800 text-neutral-100 hover:bg-zinc-700 transition-colors">
         Cadastrar
       </button>

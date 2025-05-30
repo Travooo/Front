@@ -8,13 +8,22 @@ export default function LoginForm() {
   const [senha, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate(); // Criando a função de navegação
-  console.log('email', email);
-  console.log('senha', senha);
   const handleLogin = async (event) => {
     setLoginError("");
     event.preventDefault();
     setError("");
 
+    function getUserIdFromToken(token) {
+      try {
+        const payloadBase64 = token.split('.')[1];
+        const payloadJson = atob(payloadBase64); // Decodifica Base64
+        const payload = JSON.parse(payloadJson);
+        return payload.id;
+      } catch (err) {
+        console.error("Token inválido:", err);
+        return null;
+      }
+    }
     try {
       const response = await fetch("http://localhost:3000/rest/v1/usuariosOrg/login", {
         method: "POST",
@@ -28,10 +37,11 @@ export default function LoginForm() {
       });
 
       const data = await response.json();
-
+      console.log(data)
       if (response.ok) {
-        const { token, organizacaoId } = data;
+        const token  = data.token;
         localStorage.setItem('token', token);
+        const organizacaoId = getUserIdFromToken(token)
         localStorage.setItem('organizacaoId', organizacaoId);
         alert("Login bem-sucedido!");
         navigate("/painel");
