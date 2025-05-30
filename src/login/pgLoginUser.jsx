@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom"; // Importando o hook de navegaç
 import FooterLinks from "./components/footerLinks"
 
 export default function LoginForm() {
+  const [loginError, setLoginError] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -10,11 +11,12 @@ export default function LoginForm() {
   console.log('email', email);
   console.log('senha', senha);
   const handleLogin = async (event) => {
+    setLoginError("");
     event.preventDefault();
     setError("");
 
     try {
-      const response = await fetch("http://localhost:3000/auth/login", {
+      const response = await fetch("http://localhost:3000/authsOrg/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -34,11 +36,11 @@ export default function LoginForm() {
         alert("Login bem-sucedido!");
         navigate("/painel");
       } else {
-        setError(data.mensagem || "Email ou senha incorretos!");
+        alert(dados.mensagem || "Email ou senha incorretos!");
       }
     } catch (error) {
       console.error("Erro na requisição:", error);
-      setError("Erro ao conectar com o servidor. Tente novamente.");
+      alert("Erro no login. Tente novamente.");
     }
   };
 
@@ -80,6 +82,11 @@ export default function LoginForm() {
             <input type="checkbox" id="remember" className="mr-2" />
             <label htmlFor="remember">Lembrar-me</label>
           </div>
+          {loginError && (
+            <div className="mb-3 text-sm text-red-400 text-left">
+              {loginError}
+            </div>
+          )}
           <button type="submit" className="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-2 rounded">
             Login
           </button>
