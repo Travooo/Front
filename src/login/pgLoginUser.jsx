@@ -5,14 +5,16 @@ import FooterLinks from "./components/footerLinks"
 export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [senha, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate(); // Criando a função de navegação
   console.log('email', email);
   console.log('senha', senha);
   const handleLogin = async (event) => {
     event.preventDefault();
+    setError("");
 
     try {
-      const resposta = await fetch("http://localhost:3000/rest/v1/usuario/login", {
+      const response = await fetch("http://localhost:3000/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -23,21 +25,20 @@ export default function LoginForm() {
         }),
       });
 
-      const dados = await resposta.json();
+      const data = await response.json();
 
-      if (resposta.ok) {
-        if (resposta.ok) {
-          const token = dados.token;
-          localStorage.setItem('token', token); // SALVA O TOKEN
-          alert("Login bem-sucedido!");
-          navigate("/painel");
-        }
+      if (response.ok) {
+        const { token, organizacaoId } = data;
+        localStorage.setItem('token', token);
+        localStorage.setItem('organizacaoId', organizacaoId);
+        alert("Login bem-sucedido!");
+        navigate("/painel");
       } else {
-        alert(dados.mensagem || "Email ou senha incorretos!");
+        setError(data.mensagem || "Email ou senha incorretos!");
       }
     } catch (error) {
       console.error("Erro na requisição:", error);
-      alert("Erro no login. Tente novamente.");
+      setError("Erro ao conectar com o servidor. Tente novamente.");
     }
   };
 
@@ -48,6 +49,11 @@ export default function LoginForm() {
       <div className="w-full max-w-xs p-5 bg-gray-700 bg-opacity-80 rounded-lg shadow-lg text-center">
         <img src="/imagens/icone_travo.png" width="110" height="110" className="mb-4 mx-auto" alt="Logo Travo" />
         <form onSubmit={handleLogin}>
+          {error && (
+            <div className="mb-4 p-2 bg-red-500 text-white rounded">
+              {error}
+            </div>
+          )}
           <div className="mb-3">
             <label className="block text-left mb-1">Email</label>
             <input
