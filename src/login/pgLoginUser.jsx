@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Importando o hook de navegação
+import { useNavigate } from "react-router-dom"; 
+import { Eye, EyeOff } from "lucide-react";
 import FooterLinks from "./components/footerLinks"
 
 export default function LoginForm() {
   const [loginError, setLoginError] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(true);
   const [error, setError] = useState("");
   const navigate = useNavigate(); // Criando a função de navegação
   const handleLogin = async (event) => {
@@ -50,10 +52,9 @@ export default function LoginForm() {
       }
     } catch (error) {
       console.error("Erro na requisição:", error);
-      setLoginError(data.mensagem || "Email ou senha incorretos!");
+      setLoginError("Erro na requisição. Verifique sua conexão ou tente novamente.");
     }
   };
-
 
   return (
     <main className="flex justify-center items-center h-screen bg-cover bg-center text-white"
@@ -78,15 +79,24 @@ export default function LoginForm() {
             />
           </div>
           <div className="mb-3">
-            <label className="block text-left mb-1">Senha</label>
+          <label className="block text-left mb-1">Senha</label>
+          <div className="relative">
             <input
-              type="password"
+              type={showPassword ? "password" : "text"}
               value={senha}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-2 border border-gray-400 rounded bg-gray-200 text-gray-900"
+              className="w-full p-2 pr-10 border border-gray-400 rounded bg-gray-200 text-gray-900"
               placeholder="Digite sua senha"
               required
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute inset-y-0 right-2 flex items-center"
+            >
+              {showPassword ? <EyeOff className="h-5 w-5 text-gray-600" /> : <Eye className="h-5 w-5 text-gray-600" />}
+            </button>
+          </div>
           </div>
           <div className="flex items-center mb-3">
             <input type="checkbox" id="remember" className="mr-2" />
