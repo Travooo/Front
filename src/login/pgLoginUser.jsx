@@ -44,7 +44,7 @@ export default function LoginForm() {
         const token  = data.token;
         localStorage.setItem('token', token);
         const organizacaoId = getUserIdFromToken(token)
-        localStorage.setItem('organizacaoId', organizacaoId);
+        localStorage.setItem('organizacaoId', parseInt(organizacaoId));
         alert("Login bem-sucedido!");
         navigate("/painel");
       } else {

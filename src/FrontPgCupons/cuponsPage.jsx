@@ -1,24 +1,21 @@
 'use client'
 import React, { useState } from "react";
 import Header from "../components/header";
+import { useEffect } from "react";
 import CouponForm from "./components/couponForm";
 import CouponList from "./components/couponList";
 
 
 const CuponsPage = () => {
   const token = localStorage.getItem('token'); //TOKEN DE ACESSO
-  const userId = localStorage.getItem('organizacaoId'); //ID ORGANIZAÇÃO
-  const [coupons, setCoupons] = useState([
-    { id: 1, name: "Promoção Verão", discount: "10", expiration: "2024-07-31", enabled: true },
-    { id: 2, name: "Desconto Natal", discount: "20", expiration: "2024-12-25", enabled: false },
-  ]);
-
+  const organizacaoId = parseInt(localStorage.getItem('organizacaoId')); //ID ORGANIZAÇÃO
+  const [coupons, setCoupons] = useState([]);
   const handleSaveCoupon = async (newCoupon) => {
-    if (!userId) {
+    console.log(organizacaoId)
+    if (!organizacaoId) {
       console.error("Usuário não autenticado.");
       return;
     }
-    console.log(userId)
     try {
       if (newCoupon.id) {
         const response = await fetch(`http://localhost:3000/rest/v1/cupons/${newCoupon.id}`, {
@@ -28,9 +25,8 @@ const CuponsPage = () => {
             "Authorization": `Bearer ${token}`
           },
           body: JSON.stringify({
-            nome: newCoupon.name,
-            estabelecimento_id: newCoupon.estabelecimento_id,
-            usuario_id: userId,
+            nome: newCoupon.nome,
+            estabelecimento_id: newCoupon.estabelecimento,
             descricao: newCoupon.descricao,
             expiration: newCoupon.expiration,
           }),
@@ -55,9 +51,8 @@ const CuponsPage = () => {
             "Authorization": `Bearer ${token}`
           },
           body: JSON.stringify({
-            nome: newCoupon.name,
-            estabelecimento_id: newCoupon.estabelecimento_id,
-            usuario_id: userId,
+            nome: newCoupon.nome,
+            estabelecimento_id: newCoupon.estabelecimento,
             descricao: newCoupon.descricao,
             expiration: newCoupon.expiration,
           }),
@@ -70,7 +65,9 @@ const CuponsPage = () => {
         }
 
         const savedCupom = await response.json();
-        setCoupons([...coupons, savedCupom]);
+        console.log("Cupom salvo:", savedCupom);
+        setCoupons([...coupons, { ...savedCupom, enabled: true }]);
+
 
         console.log("Cupom salvo no backend:", savedCupom);
       }
@@ -79,11 +76,58 @@ const CuponsPage = () => {
     }
   };
 
+  useEffect(() => {
+    const fetchCupons = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/rest/v1/cupons", {
+          method: "GET",
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
+        });
 
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error("Erro ao buscar cupons:", errorData);
+          return;
+        }
+
+        const data = await response.json();
+        const cuponsComEnabled = data.map(c => ({ ...c, enabled: true })); // para garantir renderização
+        setCoupons(cuponsComEnabled);
+      } catch (error) {
+        console.error("Erro na requisição GET:", error);
+      }
+    };
+
+    fetchCupons();
+  }, []);
 
   const handleEditCoupon = (coupon) => {
     setEditingCoupon(coupon);
   };
+
+  const handleDeleteCoupon = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:3000/rest/v1/cupons/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Erro ao deletar cupom:", errorData);
+        return;
+      }
+
+      setCoupons(coupons.filter(c => c.id !== id));
+      console.log("Cupom deletado com sucesso.");
+    } catch (error) {
+      console.error("Erro na requisição de deleção:", error);
+    }
+  }
 
   const handleToggleCoupon = (id) => {
     setCoupons(coupons.map(c => c.id === id ? { ...c, enabled: !c.enabled } : c));
@@ -111,6 +155,7 @@ const CuponsPage = () => {
             coupons={coupons}
             onEdit={handleEditCoupon}
             onToggle={handleToggleCoupon}
+            onDelete={handleDeleteCoupon}
           />
         </div>
       </main>

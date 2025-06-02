@@ -4,24 +4,32 @@ const CouponForm = ({ onSave, editingCoupon, setEditingCoupon }) => {
   const [nome, setName] = useState("");
   const [descricao, setDiscount] = useState("");
   const [expiration, setExpiration] = useState("");
-  const [enabled, setEnabled] = useState(false);
+  const [estabelecimento, setEstabelecimento] = useState("");
+
 
   useEffect(() => {
     if (editingCoupon) {
       setName(editingCoupon.nome);
       setDiscount(editingCoupon.descricao);
       setExpiration(editingCoupon.expiration);
-      setEnabled(editingCoupon.enabled);
+      setEstabelecimento(editingCoupon.estabelecimento);
     }
   }, [editingCoupon]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSave({ id: editingCoupon?.id, nome, descricao, expiration, enabled });
+    onSave({
+      id: editingCoupon?.id,
+      nome,
+      descricao,
+      expiration,
+      estabelecimento: parseInt(estabelecimento),
+      enabled: true
+    });
     setName("");
     setDiscount("");
     setExpiration("");
-    setEnabled(false);
+    setEstabelecimento("");
     setEditingCoupon(null);
   };
 
@@ -48,6 +56,16 @@ const CouponForm = ({ onSave, editingCoupon, setEditingCoupon }) => {
           min="0"
           max="100"
         />
+        <input
+          type="number"
+          placeholder="Estabelecimento ID"
+          className="border p-2 rounded"
+          value={estabelecimento}
+          onChange={(e) => setEstabelecimento(e.target.value)}
+          required
+          min="0"
+          max="100"
+        />
 
         <input
           type="date"
@@ -57,16 +75,6 @@ const CouponForm = ({ onSave, editingCoupon, setEditingCoupon }) => {
           onChange={(e) => setExpiration(e.target.value)}
           required
         />
-
-        <div className="flex items-center gap-2">
-          <label>Ativar Cupom</label>
-          <input
-            type="checkbox"
-            checked={enabled}
-            onChange={(e) => setEnabled(e.target.checked)}
-            className="w-5 h-5"
-          />
-        </div>
 
         <button type="submit" className="bg-red-500 text-white py-2 rounded hover:bg-red-600">
           {editingCoupon ? "Salvar Alterações" : "Salvar Cupom"}
