@@ -4,7 +4,7 @@ const CouponForm = ({ onSave, editingCoupon, setEditingCoupon }) => {
   const [nome, setName] = useState("");
   const [descricao, setDiscount] = useState("");
   const [expiration, setExpiration] = useState("");
-  const [estabelecimento, setEstabelecimento] = useState("");
+  const [estabelecimento_id, setEstabelecimentoID] = useState("");
 
 
   useEffect(() => {
@@ -12,7 +12,7 @@ const CouponForm = ({ onSave, editingCoupon, setEditingCoupon }) => {
       setName(editingCoupon.nome);
       setDiscount(editingCoupon.descricao);
       setExpiration(editingCoupon.expiration);
-      setEstabelecimento(editingCoupon.estabelecimento);
+      setEstabelecimentoID(editingCoupon.estabelecimento_id);
     }
   }, [editingCoupon]);
 
@@ -23,13 +23,13 @@ const CouponForm = ({ onSave, editingCoupon, setEditingCoupon }) => {
       nome,
       descricao,
       expiration,
-      estabelecimento: parseInt(estabelecimento),
+      estabelecimento: parseInt(estabelecimento_id),
       enabled: true
     });
     setName("");
     setDiscount("");
     setExpiration("");
-    setEstabelecimento("");
+    setEstabelecimentoID("");
     setEditingCoupon(null);
   };
 
@@ -60,8 +60,8 @@ const CouponForm = ({ onSave, editingCoupon, setEditingCoupon }) => {
           type="number"
           placeholder="Estabelecimento ID"
           className="border p-2 rounded"
-          value={estabelecimento}
-          onChange={(e) => setEstabelecimento(e.target.value)}
+          value={estabelecimento_id}
+          onChange={(e) => setEstabelecimentoID(e.target.value)}
           required
           min="0"
           max="100"

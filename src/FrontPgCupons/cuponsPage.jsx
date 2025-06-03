@@ -39,8 +39,8 @@ const CuponsPage = () => {
         }
 
         const updatedCupom = await response.json();
-        setCoupons(coupons.map(c => (c.id === newCoupon.id ? updatedCupom : c)));
-
+        await fetchCupons();       // atualiza todos os cupons do backend
+        setEditingCoupon(null);    // limpa formulário
         console.log("Cupom editado no backend:", updatedCupom);
 
       } else {
@@ -66,7 +66,9 @@ const CuponsPage = () => {
 
         const savedCupom = await response.json();
         console.log("Cupom salvo:", savedCupom);
-        setCoupons([...coupons, { ...savedCupom, enabled: true }]);
+        await fetchCupons();
+        setEditingCoupon(null);
+
 
 
         console.log("Cupom salvo no backend:", savedCupom);
@@ -76,43 +78,38 @@ const CuponsPage = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchCupons = async () => {
-      try {
-        const response = await fetch("http://localhost:3000/rest/v1/cupons", {
-          method: "GET",
-          headers: {
-            "Authorization": `Bearer ${token}`
-          }
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          console.error("Erro ao buscar cupons:", errorData);
-          return;
+  const fetchCupons = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/rest/v1/cupons", {
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${token}`
         }
+      });
 
-        const data = await response.json();
-        const cuponsComEnabled = data.map(c => ({ ...c, enabled: true })); // para garantir renderização
-        setCoupons(cuponsComEnabled);
-      } catch (error) {
-        console.error("Erro na requisição GET:", error);
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Erro ao buscar cupons:", errorData);
+        return;
       }
-    };
 
+      const data = await response.json();
+      const cuponsComEnabled = data.map(c => ({ ...c, enabled: true })); // para garantir renderização
+      setCoupons(cuponsComEnabled);
+    } catch (error) {
+      console.error("Erro na requisição GET:", error);
+    }
+  };
+  useEffect(() => {
     fetchCupons();
   }, []);
-
   const handleEditCoupon = (coupon) => {
-    // Quando seleciona um cupom para edição, normaliza os dados para o formulário
     setEditingCoupon({
       id: coupon.id,
       nome: coupon.nome,
       descricao: coupon.descricao,
       expiration: coupon.expiration,
-      // a API retorna "estabelecimento_id", mas o formulário espera
-      // o campo "estabelecimento"
-      estabelecimento: coupon.estabelecimento_id,
+      estabelecimento_id: coupon.estabelecimento_id,
     });
   };
 
