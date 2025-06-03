@@ -1,6 +1,7 @@
-import { Pencil, Trash2 } from "lucide-react";
 import React from "react";
+import { Pencil, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+
 
 const LocalCard = ({ local, onExcluir }) => {
   const navigate = useNavigate();
@@ -9,7 +10,7 @@ const LocalCard = ({ local, onExcluir }) => {
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
       <div className="flex p-4">
         <img
-          src={local.imagem || "/placeholder.svg?height=100&width=100"}
+          src={local.url_publica || "/placeholder.svg?height=100&width=100"}
           alt={local.nome}
           className="w-16 h-16 object-cover rounded-md mr-4"
         />

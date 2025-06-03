@@ -6,59 +6,55 @@
   import Footer from "../components/footer"
   import LocalCard from "./localCard.jsx";
 
-  import { Pencil, Trash2, Search, Plus, Filter } from "lucide-react"
+  import { Search, Plus } from "lucide-react"
+  //import { jwtDecode } from "jwt-decode"; 
   import { useNavigate } from "react-router-dom"
 
 
   const Servicos = () => {
-    const token = localStorage.getItem("token") //TOKEN DE ACESSO
-    const [locais, setLocais] = useState([])
+    //const token = localStorage.getItem("token")
+    const [locais, setLocais] = useState([]);
     const [tipoFiltro, setTipoFiltro] = useState("");
-    const [termoBusca, setTermoBusca] = useState("")
-    const navigate = useNavigate()
+    const [termoBusca, setTermoBusca] = useState("");
+    const navigate = useNavigate();
 
     useEffect(() => {
       const fetchLocaisComImagem = async () => {
         try {
-          // 1) Busca todos os serviços ou filtrados por tipo:
+          // 1) Busca todos os serviços da organição, ou filtrados por tipo:
           const urlServicos = tipoFiltro
-            ? `http://localhost:3000/rest/v1/servicos/tipo/${tipoFiltro}`
-            : "http://localhost:3000/rest/v1/servicos";
+            ? `http://localhost:3000/rest/v1/servicos/tipo/${tipoFiltro}/organizacao/${27}`
+            : `http://localhost:3000/rest/v1/servicos/organizacao/${27}`;
 
           const response = await axios.get(urlServicos, {
             headers: { "Content-Type": "application/json" },
           });
           const data = response.data;
-
           // 2) Busca a foto de perfil de cada serviço:
           const servicos = await Promise.all(
             data.map(async (item) => {
             try {
               const { data: anexo } = await axios.get(`http://localhost:3000/rest/v1/anexos/perfil/servicos/${item.id}`, {
-                headers: { 
-                  "Content-Type": "application/json" 
-                }
+                headers: { "Content-Type": "application/json" },
               });
+              console.log("Anexo recebido:", anexo);
               return { 
                 ...item, 
-                imagem: anexo?.url_publica || "/placeholder.svg?height=100&width=100", 
+                url_publica: anexo.url_publica,
               };
             } catch {
-              return { 
-                ...item, 
-                imagem: "/placeholder.svg?height=100&width=100" };
-            };
-          })
-        );
-        setLocais(servicos);
+              return item;
+            }})
+          );
+          setLocais(servicos);
         } catch (error) {
           console.error("Erro ao buscar serviços com imagem:", error);
         }
       };
       fetchLocaisComImagem();
-    }, [tipoFiltro, token]);
+    }, [tipoFiltro/*, token*/ ]);
 
-    // Filtra locais por termo de busca (nome ou endereço)
+    // Filtra locais por termo de busca (nome ou endereço):
     const locaisFiltrados = locais.filter(
       (local) =>
         local.nome.toLowerCase().includes(termoBusca.toLowerCase()) ||
