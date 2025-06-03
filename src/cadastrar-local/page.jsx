@@ -6,10 +6,12 @@ import Header from "../components/header"
 import Footer from "../components/footer"
 
 export default function CadastrarLocal() {
-  const token = localStorage.getItem('token'); //TOKEN DE ACESSO
+  const token = localStorage.getItem("token") //TOKEN DE ACESSO
+  const userId = localStorage.getItem("organizacaoId") //ID ORGANIZAÇÃO
   const [imagemPreview, setImagemPreview] = useState(null)
   const [menuPreview, setMenuPreview] = useState(null)
   const [cupomAtivo, setCupomAtivo] = useState(false)
+  const [horarios, setHorarios] = useState('');
 
   const handleImagemChange = (e) => {
     const file = e.target.files?.[0]
@@ -33,18 +35,62 @@ export default function CadastrarLocal() {
     }
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    // Aqui você implementaria a lógica para salvar os dados
-    alert("Local cadastrado com sucesso!")
-    // router.push("/locais") // Redirecionar para a lista de locais
+
+    const form = e.target
+    const nome = form.nome.value
+    const endereco = form.endereco.value
+    const horarios = form.horarios.value
+    const sobre = form.sobre.value
+    const cep = form.cep.value
+    const numero = form.numero.value
+    const tipo = form.tipo.value
+
+    console.log("Dados a serem enviados:", {
+      nome,
+      sobre,
+      userId,
+      cep,
+      numero,
+      tipo,
+      endereco,
+      horarios
+    });
+
+    try {
+      const response = await fetch("http://localhost:3000/rest/v1/servicos", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          nome,
+          endereco,
+          horarios,
+          sobre,
+          cep,
+          numero,
+          tipo,
+          usuario_organizacao_id: userId, // Associa o serviço à organização logada
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error("Erro ao cadastrar serviço")
+      }
+
+      const data = await response.json()
+      console.log("Serviço cadastrado com sucesso:", data)
+    } catch (error) {
+      console.error("Erro:", error)
+    }
   }
 
   const handleCupomClick = () => {
     if (cupomAtivo) {
-      // Futuramente, redirecionar para a página de cupons
       alert("Redirecionando para página de cupons...")
-      // router.push("/cupons")
     } else {
       setCupomAtivo(true)
     }
@@ -58,7 +104,7 @@ export default function CadastrarLocal() {
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center gap-3">
             <button
-              onClick={() => router.back()}
+              onClick={() => window.history.back()}
               className="text-gray-500 hover:text-amber-500 transition-colors"
               aria-label="Voltar"
             >
@@ -72,11 +118,12 @@ export default function CadastrarLocal() {
           <form onSubmit={handleSubmit} className="p-6 space-y-6">
             <div className="space-y-4">
               <div>
-                <label htmlFor="nome" className="block text-base font-medium text-gray-700">
+                <label htmlFor="titulo" className="block text-base font-medium text-gray-700">
                   Nome do Local
                 </label>
                 <input
-                  id="nome"
+                  id="titulo"
+                  name="nome"
                   type="text"
                   placeholder="Ex: Restaurante Vista Mar"
                   required
@@ -94,22 +141,55 @@ export default function CadastrarLocal() {
                   </label>
                   <input
                     id="localizacao"
+                    name="endereco"
                     type="text"
                     placeholder="Endereço completo"
                     required
                     className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                   />
+
+                  <div className="grid grid-cols-2 gap-3 mt-3">
+                    <div>
+                      <label htmlFor="cep" className="block text-sm font-medium text-gray-700">
+                        CEP
+                      </label>
+                      <input
+                        id="cep"
+                        name="cep"
+                        type="text"
+                        placeholder="00000-000"
+                        required
+                        className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="numero" className="block text-sm font-medium text-gray-700">
+                        Número
+                      </label>
+                      <input
+                        id="numero"
+                        name="numero"
+                        type="text"
+                        placeholder="123"
+                        required
+                        className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                      />
+                    </div>
+                  </div>
                 </div>
 
                 <div>
                   <label
-                    htmlFor="horario"
+                    htmlFor="horarios"
                     className="block text-base font-medium text-gray-700 flex items-center gap-2"
                   >
                     <Clock className="h-4 w-4" /> Horário de Funcionamento
                   </label>
                   <select
-                    id="horario"
+                    id="horarios"
+                    name="horarios"
+                    value={horarios}
+                    onChange={(e) => setHorarios(e.target.value)}
                     className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                   >
                     <option value="">Selecione o horário</option>
@@ -120,14 +200,30 @@ export default function CadastrarLocal() {
                     <option value="personalizado">Personalizado</option>
                   </select>
                 </div>
+                <div>
+                <label htmlFor="categoria" className="block text-base font-medium text-gray-700">
+                  Categoria
+                </label>
+                  <select
+                    id="tipo"
+                    name="tipo"
+                    className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                  >
+                    <option value="">Selecione a categoria</option>
+                    <option value="parques">Parques</option>
+                    <option value="restaurantes">Restaurantes</option>
+                    <option value="shoppings">Shoppings</option>
+                    <option value="todos">Todos os tipos</option>
+                  </select>
+                </div>
               </div>
-
               <div>
                 <label htmlFor="descricao" className="block text-base font-medium text-gray-700">
                   Descrição
                 </label>
                 <textarea
                   id="descricao"
+                  name="sobre"
                   placeholder="Descreva o local, suas atrações e diferenciais..."
                   className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 min-h-[120px]"
                   required
@@ -261,7 +357,7 @@ export default function CadastrarLocal() {
               <button
                 type="button"
                 className="px-4 py-2 border border-gray-300 bg-white hover:bg-gray-50 rounded-md transition-colors text-sm font-medium"
-                onClick={() => router.back()}
+                onClick={() => window.history.back()}
               >
                 Cancelar
               </button>

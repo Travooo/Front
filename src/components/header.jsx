@@ -22,13 +22,9 @@ const Header = () => {
         <Link to="/home" className="px-3 py-2 hover:text-amber-500 transition">
           Sair
         </Link>
-        <Link to="/perfil-estabelecimento" className="px-3 py-2 hover:text-amber-500 transition">
-          Perfil Estabelecimento
-        </Link>
         
       </nav>
 
-      {/* Espaço reservado para futuros elementos do lado direito */}
       <div className="hidden md:flex">
         <HeaderButtons />
       </div>

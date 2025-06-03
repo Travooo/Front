@@ -12,7 +12,8 @@
 
 
   const Servicos = () => {
-    //const token = localStorage.getItem("token")
+    const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("organizacaoId");
     const [locais, setLocais] = useState([]);
     const [tipoFiltro, setTipoFiltro] = useState("");
     const [termoBusca, setTermoBusca] = useState("");
@@ -24,10 +25,12 @@
           // 1) Busca todos os serviços da organição, ou filtrados por tipo:
           const urlServicos = tipoFiltro
             ? `http://localhost:3000/rest/v1/servicos/tipo/${tipoFiltro}/organizacao/${27}`
-            : `http://localhost:3000/rest/v1/servicos/organizacao/${27}`;
+            : `http://localhost:3000/rest/v1/servicos/organizacao/${userId}`;
 
           const response = await axios.get(urlServicos, {
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`
+            },
           });
           const data = response.data;
           // 2) Busca a foto de perfil de cada serviço:
