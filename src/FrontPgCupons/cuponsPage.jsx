@@ -104,7 +104,16 @@ const CuponsPage = () => {
   }, []);
 
   const handleEditCoupon = (coupon) => {
-    setEditingCoupon(coupon);
+    // Quando seleciona um cupom para edição, normaliza os dados para o formulário
+    setEditingCoupon({
+      id: coupon.id,
+      nome: coupon.nome,
+      descricao: coupon.descricao,
+      expiration: coupon.expiration,
+      // a API retorna "estabelecimento_id", mas o formulário espera
+      // o campo "estabelecimento"
+      estabelecimento: coupon.estabelecimento_id,
+    });
   };
 
   const handleDeleteCoupon = async (id) => {
