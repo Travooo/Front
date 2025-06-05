@@ -1,0 +1,53 @@
+{
+  "locations": [
+    {
+      "id": 1,
+      "name": "Barneys Burger",
+      "address": "Rua Monsenhor Otávio de Castro, 901",
+      "icon": "/icons/restaurant.svg",
+      "type": "restaurant"
+    },
+    {
+      "id": 2,
+      "name": "Shopping Iguatemi",
+      "address": "Av. Washington Soares, 85",
+      "icon": "/icons/shopping.svg",
+      "type": "shopping"
+    },
+    {
+      "id": 3,
+      "name": "Bulls",
+      "address": "R. Cel. Jucá, 700",
+      "icon": "/icons/restaurant.svg",
+      "type": "restaurant"
+    },
+    {
+      "id": 4,
+      "name": "Parque do Cocó",
+      "address": "Av. Padre Antônio Tomás",
+      "icon": "/icons/park.svg",
+      "type": "park"
+    },
+    {
+      "id": 5,
+      "name": "The Ribs",
+      "address": "Av. Barão de Studart, 2023 A",
+      "icon": "/icons/restaurant.svg",
+      "type": "restaurant"
+    },
+    {
+      "id": 6,
+      "name": "Mc Donalds",
+      "address": "Av. Treze de Maio, 1060",
+      "icon": "/icons/restaurant.svg",
+      "type": "restaurant"
+    },
+    {
+      "id": 7,
+      "name": "Burger King",
+      "address": "Av. Santos Dumont, 1859",
+      "icon": "/icons/restaurant.svg",
+      "type": "restaurant"
+    }
+  ]
+}

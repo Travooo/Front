@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import HomePage from './home/page';
+import Home from './home_google_maps_beta/page';
 import LoginUser from './login/pgLoginUser';
 import Dashboard from './painel/page';
 import PgEditLoginAdm from './editar-perfil/page';
@@ -21,6 +22,7 @@ function App() {
         <Routes>
           <Route path="/" element={<LoginUser />} />
           <Route path="/home" element={<HomePage />} />
+          <Route path="/home-beta" element={<Home/>} />
           <Route path="/loginUser" element={<LoginUser />} />
           <Route path="/registerUser" element={<RegisterPage />} />
           <Route path="/painel" element={<Dashboard />} />
