@@ -16,6 +16,7 @@ const Servicos = () => {
   //const token = localStorage.getItem("token");
   //const userId = token ? jwt_decode(token).id : null;
   const userId = 27;
+  //const userId = parseInt(localStorage.getItem('organizacaoId')); 
 
   const [locais, setLocais] = useState([]);
   const [termoBusca, setTermoBusca] = useState("");
@@ -96,7 +97,7 @@ const Servicos = () => {
       <Header />
       <main className="flex-1 max-w-screen-xl mx-auto w-full px-6 py-12 mb-20">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800">Locais</h1>
+          <h1 className="text-3xl font-bold text-gray-800">Meus Serviços</h1>
         </div>
         <div className="flex flex-col sm:flex-row gap-4 mb-10">
           <div className="relative flex-grow">
@@ -117,7 +118,7 @@ const Servicos = () => {
               className="bg-amber-500 hover:bg-amber-600 text-white px-5 py-3 rounded-md flex items-center gap-2 transition-colors font-medium"
             >
               <Plus className="h-5 w-5" />
-              <span>Add Local</span>
+              <span>Criar Novo Serviço</span>
             </button>
 
             <select
