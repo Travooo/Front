@@ -26,9 +26,10 @@ export default function CadastrarLocal() {
   const [tipo, setTipo] = useState('');
 
   // Recupera e decodifica o token do localStorage
-  //const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token");
   //const userId = token ? jwt_decode(token).id : null;
-  const userId = 27;
+  //const userId = 27;
+  const userId = parseInt(localStorage.getItem('organizacaoId')); 
 
   const navigate = useNavigate();
 
@@ -144,11 +145,25 @@ export default function CadastrarLocal() {
     try {
       const response = await axios.post("http://localhost:3000/rest/v1/servicos", payload, {
         headers: {
-          "Content-Type": "application/json"
-          /*Authorization: `Bearer ${token}`,*/
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
       });
       window.alert("Cadastro realizado com sucesso:", response.data);
+      // Limpa todos os campos do formulário após o envio
+      setNome('');
+      setCep('');
+      setCepValido(true);
+      setEndereco('');
+      setEnderecoHabilitado(false);
+      setNumero('');
+      setHorarios('');
+      setSobre('');
+      setTipo('');
+      setImagemPreview(null);
+      setMenuPreview(null);
+      setCupomAtivo(false);
+
     } catch (error) {
       console.error("Erro no cadastro:", error)
     }

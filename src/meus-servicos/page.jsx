@@ -13,10 +13,10 @@ import LocalCard from "./localCard.jsx";
 
 const Servicos = () => {
   // Recupera e decodifica o token do localStorage
-  //const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token");
   //const userId = token ? jwt_decode(token).id : null;
-  const userId = 27;
-  //const userId = parseInt(localStorage.getItem('organizacaoId')); 
+  //const userId = 27;
+  const userId = parseInt(localStorage.getItem('organizacaoId')); 
 
   const [locais, setLocais] = useState([]);
   const [termoBusca, setTermoBusca] = useState("");
@@ -38,8 +38,8 @@ const Servicos = () => {
         
         const { data: servicos } = await axios.get(urlServicos, {
           headers: { 
-            "Content-Type": "application/json"/*, 
-            "Authorization": `Bearer ${token}`*/ 
+            "Content-Type": "application/json", 
+            "Authorization": `Bearer ${token}`
           },
         });
         
@@ -81,8 +81,8 @@ const Servicos = () => {
       try {
         await axios.delete(`http://localhost:3000/rest/v1/servicos/${id}`, {
           headers: { 
-            "Content-Type": "application/json"/*, 
-            "Authorization": `Bearer ${token}`*/
+            "Content-Type": "application/json", 
+            "Authorization": `Bearer ${token}`
           },
         });
         setLocais(locais.filter((local) => local.id !== id))
