@@ -1,21 +1,18 @@
 // Serviço para buscar informações do usuário logado
-import axios from 'axios';
-
-// URL base da API - ajuste conforme necessário
-const API_URL = 'http://localhost:5173';
+import api from './axiosConfig';
 
 class UserService {
   // Método para buscar os dados do usuário organização pelo ID
   static async getUserOrgById(id) {
-        try {
-            const response = await axios.get(`${API_URL}/api/organizacoes/${id}`);
-            console.log('Dados recebidos da API (getUserOrgById):', response.data); // Adicione esta linha
-            return response.data;
-        } catch (error) {
-            console.error('Erro ao buscar dados do usuário:', error);
-            throw error;
-        }
+    try {
+      const response = await api.get(`rest/v1/usuariosOrg/${id}`);
+      console.log('Dados recebidos da API (getUserOrgById):', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Erro ao buscar dados do usuário:', error);
+      throw error;
     }
+  }
 
   // Método para obter o ID do usuário logado do localStorage
   static getUserIdFromLocalStorage() {
@@ -45,8 +42,6 @@ class UserService {
     
     return this.getUserOrgById(userId);
   }
-
-  
 }
 
 export default UserService;

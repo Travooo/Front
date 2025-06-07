@@ -9,7 +9,7 @@ import UserService from "./userService";
 
 export default function Dashboard() {
   const [userData, setUserData] = useState({
-    name: "Carregando...", // Alterado de name_fantasia para name para consistência
+    name: "Carregando...",
     image: "/imagens/pessoa.jpg"
   });
   
@@ -19,28 +19,22 @@ export default function Dashboard() {
       try {
         
         // Verificar se o token existe
-        const token = localStorage.getItem("token");
+        const token = localStorage.getItem('token');
         if (!token) {
-          console.error("Token não encontrado");
-          // Se não houver token, defina o nome como "Usuário" e retorne
-          setUserData({
-            name: "Usuário",
-            image: "/imagens/pessoa.jpg"
-          });
+          console.error('Token não encontrado');
           return;
         }
         
         // Buscar os dados do usuário logado
         const user = await UserService.getCurrentUser();
-        console.log("Objeto user retornado pelo UserService:", user); // Adicionado para depuração
         
         // Atualizar o estado com os dados do usuário
         setUserData({
-          name: user.nome || "Usuário",
+          name: user.nome_fantasia || "Usuário",
           image: "/imagens/pessoa.jpg" // Mantém a imagem padrão
         });
       } catch (error) {
-        console.error("Erro ao buscar dados do usuário:", error);
+        console.error('Erro ao buscar dados do usuário:', error);
         // Em caso de erro, mantém os dados padrão
         setUserData({
           name: "Usuário",
@@ -85,3 +79,4 @@ export default function Dashboard() {
     </div>
   );
 }
+
