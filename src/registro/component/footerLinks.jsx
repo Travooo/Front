@@ -3,9 +3,22 @@ import React from "react";
 
 const FooterLinks = () => {
   return (
-    <section className="space-y-2 text-base text-white font-semibold mt-10">
-      <p><Link to="/loginUser" className="text-white">Logar?</Link></p>
-    
+    <section className="space-y-2 text-base font-medium">
+      <p>
+        Você está procurando:{" "}
+        <Link
+          to="/loginUser"
+          className="text-[#c4fcf0] transition duration-300 hover:text-[#00dac1]"
+          onMouseEnter={(e) => {
+            e.target.style.textShadow = "0 0 5px #00dac1";
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.textShadow = "0 0 0px #00dac1";
+          }}
+        >
+          fazer log-in?
+        </Link>
+      </p>
     </section>
   );
 };

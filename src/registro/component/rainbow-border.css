@@ -1,0 +1,36 @@
+@property --angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.rainbow-border {
+  position: relative;
+  border-radius: 11px;
+  padding: 1px;
+  z-index: 0;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.rainbow-border::before {
+  content: '';
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  z-index: -1;
+  border-radius: inherit;
+  background: conic-gradient(from var(--angle), #ffff66, #33ccff, #ff00cc, #ffff66);
+  animation: spin-angle 4s linear infinite;
+}
+
+@keyframes spin-angle {
+  0% {
+    --angle: 0deg;
+  }
+  100% {
+    --angle: 360deg;
+  }
+}
