@@ -25,10 +25,8 @@ export default function CadastrarLocal() {
   const [sobre, setSobre] = useState('');
   const [tipo, setTipo] = useState('');
 
-  // Recupera e decodifica o token do localStorage
+  // Recupera token e userId
   const token = localStorage.getItem("token");
-  //const userId = token ? jwt_decode(token).id : null;
-  //const userId = 27;
   const userId = parseInt(localStorage.getItem('organizacaoId')); 
 
   const navigate = useNavigate();

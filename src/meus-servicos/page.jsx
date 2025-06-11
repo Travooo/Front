@@ -13,6 +13,7 @@ import MapDisplay from "./components/mapDisplay";
 
 const Servicos = () => {
   const navigate = useNavigate();
+  const token = localStorage.getItem('token');
   const organizacaoId = parseInt(localStorage.getItem('organizacaoId'));
   const [termoBusca, setTermoBusca] = useState("");
   const [tipoFiltro, setTipoFiltro] = useState("");
@@ -25,14 +26,25 @@ const Servicos = () => {
         ? `http://localhost:3000/rest/v1/servicos/tipo/${tipo}/organizacao/${organizacaoId}`
         : `http://localhost:3000/rest/v1/servicos/organizacao/${organizacaoId}`;
 
-      const { data } = await axios.get(url);
+      const { data } = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
       console.log("Serviços recebidos:", data);
       const servicosComImagem = await Promise.all(
         data.map(async (servico) => {
           try {
             const { data: anexo } = await axios.get(
-              `http://localhost:3000/rest/v1/anexos/perfil/servicos/${servico.id}`
+              `http://localhost:3000/rest/v1/anexos/perfil/servicos/${servico.id}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`
+                }
+              }
             );
+
             return { ...servico, url_publica: anexo?.url_publica || null };
           } catch {
             return { ...servico, url_publica: null };
