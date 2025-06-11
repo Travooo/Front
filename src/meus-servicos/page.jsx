@@ -1,105 +1,87 @@
-"use client"
+"use client";
 
 import axios from "axios";
-//import jwt_decode from "jwt-decode";
 import { Plus, Search } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Header from "../components/header";
 import Footer from "../components/footer";
-import LocalCard from "./localCard.jsx";
+import LocationSidebar from "./components/locationSidebar";
+import MapDisplay from "./components/mapDisplay";
 
 
 const Servicos = () => {
-  // Recupera e decodifica o token do localStorage
-  const token = localStorage.getItem("token");
-  //const userId = token ? jwt_decode(token).id : null;
-  //const userId = 27;
-  const userId = parseInt(localStorage.getItem('organizacaoId')); 
-
-  const [locais, setLocais] = useState([]);
+  const navigate = useNavigate();
+  const organizacaoId = parseInt(localStorage.getItem('organizacaoId'));
   const [termoBusca, setTermoBusca] = useState("");
   const [tipoFiltro, setTipoFiltro] = useState("");
+  const [locais, setLocais] = useState([]);
+  const [selectedLocationId, setSelectedLocationId] = useState(null);
 
-  const navigate = useNavigate();
+  const fetchLocations = useCallback(async (tipo = "") => {
+    try {
+      const url = tipo
+        ? `http://localhost:3000/rest/v1/servicos/tipo/${tipo}/organizacao/${organizacaoId}`
+        : `http://localhost:3000/rest/v1/servicos/organizacao/${organizacaoId}`;
+
+      const { data } = await axios.get(url);
+      console.log("Serviços recebidos:", data);
+      const servicosComImagem = await Promise.all(
+        data.map(async (servico) => {
+          try {
+            const { data: anexo } = await axios.get(
+              `http://localhost:3000/rest/v1/anexos/perfil/servicos/${servico.id}`
+            );
+            return { ...servico, url_publica: anexo?.url_publica || null };
+          } catch {
+            return { ...servico, url_publica: null };
+          }
+        })
+      );
+      const locaisFormatados = servicosComImagem.map((servico) => ({
+        ...servico,
+        lat: servico.lat,
+        lng: servico.lng,
+      }));
+      setLocais(locaisFormatados);
+    } catch (error) {
+      console.error("Erro ao buscar serviços:", error);
+    }
+  }, [organizacaoId]);
 
   useEffect(() => {
-    if (!userId) {
-      console.error("Usuário não autenticado ou token inválido");
-      return;
-    }
-    const fetchLocaisComImagem = async () => {
-      try {
-        // 1) Busca todos os serviços da organição, ou filtrados por tipo:
-        const urlServicos = tipoFiltro
-          ? `http://localhost:3000/rest/v1/servicos/tipo/${tipoFiltro}/organizacao/${userId}`
-          : `http://localhost:3000/rest/v1/servicos/organizacao/${userId}`;
-        
-        const { data: servicos } = await axios.get(urlServicos, {
-          headers: { 
-            "Content-Type": "application/json", 
-            "Authorization": `Bearer ${token}`
-          },
-        });
-        
-        // 2) Busca o anexo da imagem de perfil de cada serviço e adiciona sua URL (se houver):
-        const servicosComImagem = await Promise.all(
-          servicos.map(async (servico) => {
-          try {
-            const { data: anexo } = await axios.get(`http://localhost:3000/rest/v1/anexos/perfil/servicos/${servico.id}`, {
-              headers: { 
-                "Content-Type": "application/json"/*, 
-                "Authorization": `Bearer ${token}`*/ 
-              },
-            });
-            return { 
-              ...servico, 
-              url_publica: anexo.url_publica,
-            };
-          } catch {
-            return servico;
-          }})
-        );
-        setLocais(servicosComImagem);
-      } catch (error) {
-        console.error("Erro ao buscar serviços com imagem:", error);
-      }
-    };
-    fetchLocaisComImagem();
-  }, [tipoFiltro, /*token,*/ userId]);
+    fetchLocations(tipoFiltro);
+  }, [tipoFiltro, fetchLocations]);
 
-  // Filtra locais por termo de busca (nome ou endereço):
-  const locaisFiltrados = locais.filter((local) =>
-      local.nome.toLowerCase().includes(termoBusca.toLowerCase()) ||
-      (local.endereco || "").toLowerCase().includes(termoBusca.toLowerCase()) || 
-      String(local.cep).includes(termoBusca)
-  );
+  const handleLocationSelect = (id) => setSelectedLocationId(id);
 
   const excluirLocal = async (id) => {
     if (window.confirm("Tem certeza que deseja excluir este local?")) {
       try {
-        await axios.delete(`http://localhost:3000/rest/v1/servicos/${id}`, {
-          headers: { 
-            "Content-Type": "application/json", 
-            "Authorization": `Bearer ${token}`
-          },
-        });
-        setLocais(locais.filter((local) => local.id !== id))
+        await axios.delete(`http://localhost:3000/rest/v1/servicos/${id}`);
+        setLocais((prev) => prev.filter((local) => local.id !== id));
       } catch (error) {
-        alert("Erro ao excluir o local:", error.message, "Tente novamente.");
+        alert("Erro ao excluir o local. Tente novamente.");
+        console(error);
       }
     }
   };
 
+  const locaisFiltrados = locais.filter((local) =>
+    [local.nome, local.endereco, String(local.cep)]
+      .join(" ")
+      .toLowerCase()
+      .includes(termoBusca.toLowerCase())
+  );
+
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
       <Header />
-      <main className="flex-1 max-w-screen-xl mx-auto w-full px-6 py-12 mb-20">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800">Meus Serviços</h1>
-        </div>
-        <div className="flex flex-col sm:flex-row gap-4 mb-10">
+      <main className="flex-1 max-w-screen-xl mx-auto w-full px-6 py-12">
+
+        {/* Section: Busca, filtros e cadastro */}
+        <section id="search-controls" className="flex flex-col sm:flex-row gap-4 mb-6 -mt-8">
           <div className="relative flex-grow">
             <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
               <Search className="h-5 w-5 text-gray-400" />
@@ -112,52 +94,51 @@ const Servicos = () => {
               onChange={(e) => setTermoBusca(e.target.value)}
             />
           </div>
+
           <div className="flex gap-3">
             <button
               onClick={() => navigate("/cadastrar-local")}
               className="bg-amber-500 hover:bg-amber-600 text-white px-5 py-3 rounded-md flex items-center gap-2 transition-colors font-medium"
             >
               <Plus className="h-5 w-5" />
-              <span>Criar Novo Serviço</span>
+              Criar Novo Serviço
             </button>
-
             <select
               value={tipoFiltro}
               onChange={(e) => setTipoFiltro(e.target.value)}
-              className="border border-gray-300 bg-white hover:bg-gray-50 px-5 py-3 rounded-md transition-colors"
+              className="border border-gray-300 bg-white px-5 py-3 rounded-md transition-colors"
             >
               <option value="">Todos os tipos</option>
               <option value="restaurant">Restaurantes</option>
               <option value="park">Parques</option>
               <option value="shopping">Shoppings</option>
-
-              {/* 
-              <button className="border border-gray-300 bg-white hover:bg-gray-50 px-5 py-3 rounded-md transition-colors flex items-center gap-2">
-              <Filter className="h-5 w-5 text-gray-500" />
-              <span>Filtros</span> 
-              */}
             </select>
           </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-8">
-          {locaisFiltrados.map((local) => (
-              <LocalCard key={local.id} local={local} onExcluir={excluirLocal} />
-          ))}
-          {locaisFiltrados.length === 0 && (
-          <div className="text-center py-16 bg-white rounded-lg shadow-sm my-8">
-            <p className="text-gray-500 text-lg">Nenhum local encontrado.</p>
-            <button 
-              onClick={() => setTermoBusca("")} 
-              className="mt-4 text-amber-600 hover:text-amber-700">
-              Limpar busca
-            </button>
-          </div>
-          )}
-        </div>
+        </section>
+
+        {/* Section: Explorador de locais */}
+        <section id="explorer" className="flex gap-6 mt-4 max-md:flex-col">
+          <section id="sidebar" className="w-[35%] max-md:w-full">
+            <LocationSidebar
+              locations={locaisFiltrados}
+              onSelect={handleLocationSelect}
+              onFilter={setTipoFiltro}
+              excluirLocal={excluirLocal}
+            />
+          </section>
+
+          <section id="map" className="w-[60%] max-md:w-full min-h-[400px]">
+            <MapDisplay
+              selectedLocationId={selectedLocationId}
+              locations={locaisFiltrados}
+            />
+          </section>
+        </section>
+
       </main>
       <Footer />
     </div>
-  )
-}
+  );
+};
 
-export default Servicos
+export default Servicos;
