@@ -20,7 +20,7 @@ function App() {
     <UserProvider>
       <Router>
         <Routes>
-          <Route path="/" element={<LoginUser />} />
+          <Route path="/" element={<HomePage />} />
           <Route path="/home" element={<HomePage />} />
           <Route path="/home-beta" element={<Home/>} />
           <Route path="/loginUser" element={<LoginUser />} />
