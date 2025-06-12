@@ -2,15 +2,18 @@
 import { useNavigate } from "react-router-dom"
 
 const Logo = () => {
+
+  //comentei o seguinte código pq tava deslogando o usuário quando clickava na logo
+  /*
   const navigate = useNavigate()
 
   const handleLogoClick = () => {
     navigate("/home")
   }
-
+  */ 
   return (
     <div
-      onClick={handleLogoClick}
+      //onClick={handleLogoClick}
       className="flex absolute z-10 items-center top-[15px] left-[60px] text-4xl font-bold tracking-tighter text-orange-200 h-[50px] cursor-pointer hover:opacity-90 transition-opacity"
     >
       <h1 className="mr-1">

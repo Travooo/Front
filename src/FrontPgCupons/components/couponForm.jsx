@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios"; // Vamos supor que você usa axios
 
-const CouponForm = ({ onSave, editingCoupon, setEditingCoupon }) => {
+const CouponForm = ({ onSave, editingCoupon, setEditingCoupon, token, organizacaoId }) => {
   const [nome, setName] = useState("");
   const [descricao, setDiscount] = useState("");
   const [expiration, setExpiration] = useState("");
   const [estabelecimento_id, setEstabelecimentoID] = useState("");
-
+  const [estabelecimentos, setEstabelecimentos] = useState([]);
 
   useEffect(() => {
     if (editingCoupon) {
@@ -15,6 +16,24 @@ const CouponForm = ({ onSave, editingCoupon, setEditingCoupon }) => {
       setEstabelecimentoID(editingCoupon.estabelecimento_id);
     }
   }, [editingCoupon]);
+
+  useEffect(() => {
+  const fetchEstabelecimentos = async () => {
+    try {
+      const response = await fetch(`http://localhost:3000/rest/v1/servicos/organizacao/${organizacaoId}`, {
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      });
+      const data = await response.json();
+      setEstabelecimentos(data);
+    } catch (error) {
+      console.error("Erro ao buscar estabelecimentos:", error);
+    }
+  };
+  fetchEstabelecimentos();
+}, [token, organizacaoId]);
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -56,16 +75,19 @@ const CouponForm = ({ onSave, editingCoupon, setEditingCoupon }) => {
           min="0"
           max="100"
         />
-        <input
-          type="number"
-          placeholder="Estabelecimento ID"
+        <select
           className="border p-2 rounded"
           value={estabelecimento_id}
           onChange={(e) => setEstabelecimentoID(e.target.value)}
           required
-          min="0"
-          max="100"
-        />
+        >
+          <option value="">Selecione o estabelecimento</option>
+          {estabelecimentos.map((est) => (
+            <option key={est.id} value={est.id}>
+              {est.nome}
+            </option>
+          ))}
+        </select>
 
         <input
           type="date"

@@ -428,6 +428,9 @@ export default function CadastrarLocal() {
           </div>
 
           <div className="flex items-center space-x-2 pt-2">
+            {/*COMENTEI BOTÃO DE CUPONS*/}
+            
+            {/*
             <div className="flex-1">
               <label htmlFor="cupom" className="block text-base font-medium text-gray-700 flex items-center gap-2">
                 <Ticket className="h-4 w-4" /> Atribuir Cupom
@@ -461,6 +464,7 @@ export default function CadastrarLocal() {
                 )}
               </div>
             </div>
+            */}
             <div className="flex justify-end space-x-4 pt-4">
               <button
                 type="button"

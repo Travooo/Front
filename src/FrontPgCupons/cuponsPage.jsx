@@ -39,8 +39,8 @@ const CuponsPage = () => {
         }
 
         const updatedCupom = await response.json();
-        await fetchCupons();       // atualiza todos os cupons do backend
-        setEditingCoupon(null);    // limpa formulário
+        await fetchCupons();
+        setEditingCoupon(null);
         console.log("Cupom editado no backend:", updatedCupom);
 
       } else {
@@ -146,16 +146,18 @@ const CuponsPage = () => {
       <Header />
 
       <main className="flex flex-col md:flex-row p-6 gap-6">
-        {/* Formulário de Cupom */}
+
         <div className="w-full md:w-1/2">
           <CouponForm
             onSave={handleSaveCoupon}
             editingCoupon={editingCoupon}
             setEditingCoupon={setEditingCoupon}
+            token={token}
+            organizacaoId={organizacaoId}
           />
+
         </div>
 
-        {/* Lista de Cupons */}
         <div className="w-full md:w-1/2">
           <CouponList
             coupons={coupons}
