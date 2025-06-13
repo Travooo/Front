@@ -20,7 +20,7 @@ const MapDisplay = ({ selectedLocationId, locations = [] }) => {
       }
 
       const script = document.createElement("script");
-      script.src = `https://maps.gomaps.pro/maps/api/js?key=AlzaSykbGay7zmALzroNljcCsH5kCF-V2-Ek-9p`;
+      script.src = `https://maps.gomaps.pro/maps/api/js?key=AlzaSy5Ug2IAPE8-1-C4-dCC2SJapT1UqGnVy7g`;
       script.id = "googleMaps";
       script.async = true;
       script.defer = true;

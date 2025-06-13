@@ -1,7 +1,7 @@
 import React from "react";
 import EstablishmentCard from "./establishmentCard";
 
-const EstablishmentList = ({ establishments = [], excluirLocal, onSelect }) => {
+const EstablishmentList = ({ establishments = [], selectedId, onSelect, excluirLocal }) => {
   if (!establishments.length) {
     return (
       <div className="col-span-full text-center py-16 bg-white rounded-lg shadow-sm">
@@ -16,16 +16,17 @@ const EstablishmentList = ({ establishments = [], excluirLocal, onSelect }) => {
     );
   }
   return (
-    <div className="grid grid-cols-2 px-2">
+    <div className="grid grid-cols-2 gap-2 px-2 py-4">
       {establishments.map((local) => (
         <EstablishmentCard
-          onSelect={onSelect}
-          excluirLocal={excluirLocal}
+          id={local.id}
           name={local.nome} 
           address={local.endereco} 
           image={local.url_publica}
-          id={local.id}
           rating={4} //TODO: Incluir lógica de receber média ae avaliações por serviço_id (back/front) 
+          isSelected={selectedId === local.id}
+          onSelect={onSelect}
+          excluirLocal={excluirLocal}
         />
       ))}
     </div>

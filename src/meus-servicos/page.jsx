@@ -2,7 +2,7 @@
 
 import axios from "axios";
 import { Plus, Search } from "lucide-react";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Header from "../components/header";
@@ -19,6 +19,38 @@ const Servicos = () => {
   const [tipoFiltro, setTipoFiltro] = useState("");
   const [locais, setLocais] = useState([]);
   const [selectedLocationId, setSelectedLocationId] = useState(null);
+  const [activeFilter, setActiveFilter] = useState("all");
+  const sidebarRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
+        setSelectedLocationId(null);
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
+
+  const locaisFiltrados = locais.filter((local) => {
+    const matchTipo = activeFilter === "all" || local.tipo === activeFilter;
+    const matchTermo =
+      termoBusca.trim() === "" ||
+      local.nome.toLowerCase().includes(termoBusca.toLowerCase());
+    return matchTipo && matchTermo;
+  });
+
+  const handleFilterChange = (filter) => {
+    setActiveFilter(filter);
+  };
+
+  const handleSelectLocation = (id) => {
+    setSelectedLocationId(id);
+  };
 
   const fetchLocations = useCallback(async (tipo = "") => {
     try {
@@ -60,18 +92,20 @@ const Servicos = () => {
     } catch (error) {
       console.error("Erro ao buscar serviços:", error);
     }
-  }, [organizacaoId]);
+  }, [token, organizacaoId]);
 
   useEffect(() => {
     fetchLocations(tipoFiltro);
   }, [tipoFiltro, fetchLocations]);
 
-  const handleLocationSelect = (id) => setSelectedLocationId(id);
-
   const excluirLocal = async (id) => {
     if (window.confirm("Tem certeza que deseja excluir este local?")) {
       try {
-        await axios.delete(`http://localhost:3000/rest/v1/servicos/${id}`);
+        await axios.delete(`http://localhost:3000/rest/v1/servicos/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setLocais((prev) => prev.filter((local) => local.id !== id));
       } catch (error) {
         alert("Erro ao excluir o local. Tente novamente.");
@@ -79,13 +113,6 @@ const Servicos = () => {
       }
     }
   };
-
-  const locaisFiltrados = locais.filter((local) =>
-    [local.nome, local.endereco, String(local.cep)]
-      .join(" ")
-      .toLowerCase()
-      .includes(termoBusca.toLowerCase())
-  );
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
@@ -133,16 +160,19 @@ const Servicos = () => {
           <section id="sidebar" className="w-[35%] max-md:w-full">
             <LocationSidebar
               locations={locaisFiltrados}
-              onSelect={handleLocationSelect}
-              onFilter={setTipoFiltro}
+              selectedLocationId={selectedLocationId}
+              onSelect={handleSelectLocation}
+              activeFilter={activeFilter}
+              setActiveFilter={setActiveFilter}
+              onFilter={handleFilterChange}
               excluirLocal={excluirLocal}
             />
           </section>
 
           <section id="map" className="w-[60%] max-md:w-full min-h-[400px]">
             <MapDisplay
-              selectedLocationId={selectedLocationId}
               locations={locaisFiltrados}
+              selectedLocationId={selectedLocationId}
             />
           </section>
         </section>

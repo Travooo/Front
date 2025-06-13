@@ -4,15 +4,14 @@ import Pagination from "./pagination";
 import "./custom-scrollbar.css";
 
 const FILTERS = [
-  { key: "", label: "Todos" },
+  { key: "all", label: "Todos" },
   { key: "restaurant", label: "Restaurantes" },
   { key: "shopping", label: "Compras" },
   { key: "park", label: "Parques" },
 ];
 
-const LocationSidebar = ({ onSelect, locations = [], onFilter, excluirLocal }) => {
+const LocationSidebar = ({ locations = [], selectedLocationId, onSelect, onFilter, excluirLocal, activeFilter, setActiveFilter}) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [activeFilter, setActiveFilter] = useState("all");
 
   const ITEMS_PER_PAGE = 5;
 
@@ -42,10 +41,11 @@ const LocationSidebar = ({ onSelect, locations = [], onFilter, excluirLocal }) =
   };
 
   return (
-    <aside className="flex flex-col w-full h-full max-h-[633px] rounded-lg bg-[#5d412b] px-2 pt-2 pb-4 overflow-hidden shadow-lg">
-      <header className="flex justify-between items-center p-2 border-b border-black text-white">
-        <h1 className="text-3xl font-semibold">Meus Serviços</h1>
-        
+    <aside className="flex flex-col w-full h-full max-h-[633px] rounded-lg bg-[#413626] px-2 pt-2 pb-4 overflow-y: auto shadow-lg">
+      
+      <header className="flex justify-between items-center p-4 border-b border-black text-white">
+        <h1 className="text-3xl text-[#e8e7ac] font-semibold">Meus Serviços</h1>
+        {/* Filtro */}
         <div className="flex flex-wrap gap-1">
           <select
             value={activeFilter}
@@ -59,15 +59,15 @@ const LocationSidebar = ({ onSelect, locations = [], onFilter, excluirLocal }) =
             ))}
           </select>
         </div>
-
       </header>
       
-      <div className="flex-1 overflow-y-auto py-2 custom-scrollbar">
+      <div className="flex-1 overflow-y-auto p custom-scrollbar">
         {paginatedLocations.length > 0 ? (
           <EstablishmentList
-            establishments={paginatedLocations}
-            onSelect={handleLocationClick}
-            excluirLocal={excluirLocal}
+          establishments={paginatedLocations}
+          selectedId={selectedLocationId} // corrigido aqui
+          onSelect={handleLocationClick}
+          excluirLocal={excluirLocal}
           />
         ) : (
           <div className="text-center py-8 text-gray-500">Nenhum encontrado</div>
