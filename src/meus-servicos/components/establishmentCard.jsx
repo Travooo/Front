@@ -18,10 +18,11 @@ function EstablishmentCard({ image, name, address, rating, id, excluirLocal }) {
   }, [address]);
 
   return (
-    <div 
-      className="bg-yellow-100 border-2 border-[#b57f3f] hover:border-[#ffd477] shadow-xl rounded-lg overflow-hidden w-48 transition-colors"
-      onClick={() => navigate(`/perfil-estabelecimento/${id}`)} 
+    <div
+      className="bg-yellow-100 border-2 border-[#b57f3f] hover:border-[#ffd477] shadow-xl rounded-lg overflow-hidden w-48 transition-colors cursor-pointer"
+      onClick={() => navigate(`/perfil-estabelecimento/${id}`)}
     >
+
       <img src={image} alt={name} className="w-full h-32 object-cover" />
       <div className="p-2">
         <h3 className="text-center text-base font-semibold mb-2">{name}</h3>
