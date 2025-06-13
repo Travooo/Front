@@ -6,7 +6,7 @@ const CouponCards = ({ coupons }) => {
 
   return (
     <section>
-      <h2 className="text-xl font-bold text-black mb-4">Cupons Cadastrados a esse local/serviço</h2>
+      <h2 className="text-3xl font-bold text-black mb-4">Cupons Cadastrados a esse local/serviço</h2>
       <div className="flex flex-wrap gap-4">
         {coupons.map((c) => (
           <div

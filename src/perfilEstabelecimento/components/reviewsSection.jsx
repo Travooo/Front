@@ -9,7 +9,7 @@ const reviews = [
 const ReviewsSection = () => {
   return (
     <section>
-      <h2 className="text-xl font-bold text-red-600 mb-4">Avaliações e comentários</h2>
+      <h2 className="text-3xl font-bold text-black-600 mb-4">Avaliações e comentários</h2>
       <div className="flex flex-wrap gap-4">
         {reviews.map((r, i) => (
           <div key={i} className="bg-white border rounded-lg p-4 shadow-md w-full md:w-64">
