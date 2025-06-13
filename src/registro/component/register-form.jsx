@@ -1,8 +1,12 @@
+
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; 
 import { Eye, EyeOff } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 import FooterLinks from "./footerLinks";
-import './rainbow-border.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import '../../components/rainbow-border.css';
+
 
 function RegisterForm() {
   const [backendErrors, setBackendErrors] = useState([]);
@@ -130,8 +134,9 @@ function RegisterForm() {
         }
         return;
       }
-      alert("Usuário registrado com sucesso!");
-      navigate("/loginUser");
+      toast.success("Usuário registrado com sucesso!", {
+        onClose: () => navigate("/loginUser")
+      });
     } catch (err) {
       alert(err.message);
     }
@@ -212,12 +217,12 @@ function RegisterForm() {
         <img src="/imagens/icone_travo.png" alt="Logo TRAVO" width={110} height={110} className="mx-auto" />
       </div>
 
-      <h1 className="text-2xl font-bold mb-12 italic">Crie sua conta</h1>
+      <h1 className="text-2xl font-bold mb-12">Crie sua conta</h1>
 
-      <form>
-        <div onSubmit={handleSubmit} className="w-full">
+      <form onSubmit={handleSubmit}>
+        <div className="w-full">
           <div className="mb-3 relative">
-            <label className="block text-left text-sm text-font-medium mb-0.35 ml-1" htmlFor="nome_fantasia">Nome</label>
+            <label className="block text-left text-sm font-medium mb-0.35 ml-1" htmlFor="nome_fantasia">Nome</label>
             <div className="relative">
               <input
                 id="nome_fantasia"
@@ -397,6 +402,17 @@ function RegisterForm() {
       </form>
 
       <FooterLinks />
+      <ToastContainer 
+        position="top-right"
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
 
     </div>
   );
