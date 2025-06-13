@@ -119,7 +119,7 @@ export default function LoginForm() {
         const organizacaoId = getUserIdFromToken(token);
         localStorage.setItem('organizacaoId', parseInt(organizacaoId));
         toast.success("Login bem-sucedido!", {
-          onClose: () => navigate("/painel")
+          onClose: () => navigate("/dashboard")
         });
       } else {
         const msg = data.mensagem?.toLowerCase() || "";
