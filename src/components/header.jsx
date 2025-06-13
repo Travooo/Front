@@ -5,7 +5,7 @@ import HeaderButtons from "./headerButtons";
 const Header = () => {
   const location = useLocation();
   const navLinks = [
-    { to: "/painel", label: "Painel" },
+    { to: "/dashboard", label: "Painel" },
     { to: "/meus-servicos", label: "Serviços" },
     { to: "/meus-cupons", label: "Cupons" },
     { to: "/home", label: "Sair" },
