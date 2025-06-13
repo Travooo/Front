@@ -31,7 +31,7 @@ function App() {
           <Route path="/cupons" element={<PgCupons />} />
           <Route path="/cadastrar-local" element={<CadastrarLocal />} />
           <Route path="/meus-cupons" element={<CuponsPage />} />
-          <Route path="/perfil-estabelecimento" element={<PerfilEstabelecimento />} />
+          <Route path="/perfil-estabelecimento/:id" element={<PerfilEstabelecimento />} />
           <Route path="/editar-servico" element={<EditarServico />} />
         </Routes>
       </Router>
