@@ -2,18 +2,23 @@
 
 import axios from "axios";
 import { ArrowLeft, Clock, MapPin, Plus, Upload, Save, Ticket, X } from "lucide-react"
-//import jwt_decode from "jwt-decode";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import Header from "../components/header";
 import Footer from "../components/footer";
 
-
 export default function CadastrarLocal() {
+  const imagemRef = useRef(null);
+  const menuRef = useRef(null);
+
+  const [imagemFile, setImagemFile] = useState(null)
   const [imagemPreview, setImagemPreview] = useState(null)
+
+  const [menuFile, setMenuFile] = useState(null)
   const [menuPreview, setMenuPreview] = useState(null)
-  const [cupomAtivo, setCupomAtivo] = useState(false)
 
   const [nome, setNome] = useState('');
   const [cep, setCep] = useState('');
@@ -25,11 +30,21 @@ export default function CadastrarLocal() {
   const [sobre, setSobre] = useState('');
   const [tipo, setTipo] = useState('');
 
-  // Recupera token e userId
   const token = localStorage.getItem("token");
-  const userId = parseInt(localStorage.getItem('organizacaoId')); 
+  const userId = parseInt(localStorage.getItem('organizacaoId'));
 
   const navigate = useNavigate();
+
+  const validarFormulario = () => {
+    if (!nome.trim()) return alert("O campo 'Nome' é obrigatório.") || false;
+    if (!cep || cep.length !== 8 || !cepValido) return alert("Informe um CEP válido com 8 dígitos.") || false;
+    if (!enderecoHabilitado || !endereco.trim()) return alert("Endereço não localizado. Verifique o CEP.") || false;
+    if (!numero.trim()) return alert("O campo 'Número' do endereço é obrigatório.") || false;
+    if (!horarios.trim()) return alert("Informe os horários de funcionamento.") || false;
+    if (!sobre.trim()) return alert("O campo 'Sobre' é obrigatório.") || false;
+    if (!tipo.trim()) return alert("Selecione um tipo de estabelecimento.") || false;
+    return true;
+  };
 
   const handleCepChange = async (e) => {
     const raw = e.target.value.replace(/\D/g, "").slice(0, 8);
@@ -55,6 +70,8 @@ export default function CadastrarLocal() {
   const handleImagemChange = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    setImagemFile(file);
+
     const reader = new FileReader();
     reader.onload = (event) => setImagemPreview(event.target?.result);
     reader.readAsDataURL(file);
@@ -63,54 +80,18 @@ export default function CadastrarLocal() {
   const handleMenuChange = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    console.log("Arquivo selecionado:", file);
+    console.log("Tipo:", file.type);
+
+    setMenuFile(file);
+
     const reader = new FileReader();
     reader.onload = (event) => setMenuPreview(event.target?.result);
     reader.readAsDataURL(file);
   }
 
-  const handleCupomClick = () => {
-    if (cupomAtivo) {
-      alert("Redirecionando para página de cupons...");
-      navigate("/meus-cupons")
-    } else {
-      setCupomAtivo(true);
-    }
-  };
-
-  const validarFormulario = () => {
-    if (!nome.trim()) {
-      alert("O campo 'Nome' é obrigatório.");
-      return false;
-    }
-    if (!cep || cep.length !== 8 || !cepValido) {
-      alert("Informe um CEP válido com 8 dígitos.");
-      return false;
-    }
-    if (!enderecoHabilitado || !endereco.trim()) {
-      alert("Endereço não localizado. Verifique o CEP.");
-      return false;
-    }
-    if (!numero.trim()) {
-      alert("O campo 'Número' do endereço é obrigatório.");
-      return false;
-    }
-    if (!horarios.trim()) {
-      alert("Informe os horários de funcionamento.");
-      return false;
-    }
-    if (!sobre.trim()) {
-      alert("O campo 'Sobre' é obrigatório.");
-      return false;
-    }
-    if (!tipo.trim()) {
-      alert("Selecione um tipo de estabelecimento.");
-      return false;
-    }
-    return true;
-  };
-
   const getLatLng = async (address) => {
-    const GOOGLE_API_KEY = 'AIzaSyDeti5qtLTkk5azyxQIFIZjYZSqWEsfuqQ'; // Colocar no .env
+    const GOOGLE_API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
     const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${GOOGLE_API_KEY}`;
     const response = await axios.get(url);
     if (response.data.status === 'OK' && response.data.results.length > 0) {
@@ -120,35 +101,88 @@ export default function CadastrarLocal() {
   }
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
     if (!validarFormulario()) return;
 
-    const latLng = await getLatLng(`${endereco} - ${numero}`);
-
-    const payload = {
-      usuario_organizacao_id: userId,
-      nome: nome,
-      endereco: `${endereco} - ${numero}`,
-      horarios: horarios,
-      sobre: sobre,
-      cep: cep,
-      tipo: tipo,
-      lat: latLng.lat,
-      lng: latLng.lng,
-    };
-
-    console.log("Enviando dados:", payload);
-
     try {
-      const response = await axios.post("http://localhost:3000/rest/v1/servicos", payload, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+      const latLng = await getLatLng(`${endereco} - ${numero}`);
+
+      const payload = {
+        usuario_organizacao_id: userId,
+        nome,
+        endereco: `${endereco} - ${numero}`,
+        horarios,
+        sobre,
+        cep,
+        tipo,
+        lat: latLng.lat,
+        lng: latLng.lng,
+      };
+
+      
+      const { data: novoServico } = await axios.post(
+        "http://localhost:3000/rest/v1/servicos",
+        payload,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const servicoId = Array.isArray(novoServico) ? novoServico[0]?.id : novoServico?.id;
+      if (!servicoId) throw new Error("ID do serviço não retornado pela API.");
+
+      if (imagemFile) {
+        const formData = new FormData();
+        formData.append("file", imagemFile);
+        formData.append("entidade_tipo", "servicos");
+        formData.append("folder", "perfil");
+        formData.append("entidade_id", String(servicoId));
+
+        try {
+          const resp = await axios.post("http://localhost:3000/rest/v1/anexos", formData, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          console.log('Upload imagemRef success:', resp.data);
+        } catch (error) {
+          console.error('Upload imagemRef error:', error.response?.data || error.message);
+        }
+      }
+
+      if (menuFile) {
+        const formData = new FormData();
+        formData.append("file", menuFile);
+        formData.append("entidade_tipo", "servicos");
+        formData.append("folder", "docs");
+        formData.append("entidade_id", String(servicoId));
+        
+        console.log("Enviando menu com FormData:");
+        for (let pair of formData.entries()) {
+          console.log(pair[0]+ ':', pair[1]);
+        }
+        
+        try {
+          const resp = await axios.post("http://localhost:3000/rest/v1/anexos", formData, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          console.log('Upload menuRef success:', resp.data);
+        } catch (error) {
+          console.error('Upload menuRef error:', error.response?.data || error.message);
+        }
+      }
+
+
+      toast.success("Cadastro realizado com sucesso", {
+        onClose: () => navigate("/meus-servicos")
       });
-      window.alert("Cadastro realizado com sucesso:", response.data);
-      // Limpa todos os campos do formulário após o envio
+
       setNome('');
       setCep('');
       setCepValido(true);
@@ -158,12 +192,21 @@ export default function CadastrarLocal() {
       setHorarios('');
       setSobre('');
       setTipo('');
+      setImagemFile(null);
       setImagemPreview(null);
+      setMenuFile(null);
       setMenuPreview(null);
-      setCupomAtivo(false);
+
+      if (imagemRef.current) imagemRef.current.value = "";
+      if (menuRef.current) menuRef.current.value = "";
+
+/*       toast.success("Cadastro realizado com sucesso", {
+        onClose: () => navigate("/meus-servicos")
+      }); */
 
     } catch (error) {
-      console.error("Erro no cadastro:", error)
+      console.error("Erro no cadastro:", error);
+      toast.error("Erro ao cadastrar local. Verifique os dados.");
     }
   };
 
@@ -309,7 +352,7 @@ export default function CadastrarLocal() {
             <div className="col-span-1">
               <label
                 htmlFor="horarios"
-                className="block text-base font-medium text-gray-700 flex items-center gap-2"
+                className="flex text-base font-medium text-gray-700 items-center gap-2"
               >
                 <Clock className="h-4 w-4" /> Horário de Funcionamento
               </label>
@@ -347,7 +390,7 @@ export default function CadastrarLocal() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label htmlFor="imagem" className="block text-base font-medium text-gray-700 flex items-center gap-2">
+              <label htmlFor="imagem" className="flex text-base font-medium text-gray-700 items-center gap-2">
                 <Upload className="h-4 w-4" /> Imagem do Local
               </label>
               <div className="mt-2 flex flex-col items-center">
@@ -361,7 +404,11 @@ export default function CadastrarLocal() {
                     <button
                       type="button"
                       className="absolute top-2 right-2 h-8 w-8 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600"
-                      onClick={() => setImagemPreview(null)}
+                      onClick={() => {
+                        setImagemPreview(null);
+                        setImagemFile(null);
+                        if (imagemRef.current) imagemRef.current.value = "";
+                      }}
                     >
                       <X className="h-4 w-4" />
                     </button>
@@ -372,6 +419,8 @@ export default function CadastrarLocal() {
                     <p className="text-sm text-gray-500">Clique para selecionar ou arraste a imagem</p>
                     <input
                       id="imagem"
+                      ref={imagemRef}
+                      name="file"
                       type="file"
                       accept="image/*"
                       className="hidden"
@@ -380,7 +429,7 @@ export default function CadastrarLocal() {
                     <button
                       type="button"
                       className="mt-2 px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 flex items-center gap-2"
-                      onClick={() => document.getElementById("imagem")?.click()}
+                      onClick={() => imagemRef.current?.click()}
                     >
                       <Plus className="h-4 w-4" />
                       Selecionar Imagem
@@ -391,7 +440,7 @@ export default function CadastrarLocal() {
             </div>
 
             <div>
-              <label htmlFor="menu" className="block text-base font-medium text-gray-700 flex items-center gap-2">
+              <label htmlFor="menu" className="flex text-base font-medium text-gray-700 items-center gap-2">
                 <Upload className="h-4 w-4" /> Anexar Cardápio (PDF)
               </label>
               <div className="mt-2 flex flex-col items-center">
@@ -403,7 +452,11 @@ export default function CadastrarLocal() {
                     <button
                       type="button"
                       className="absolute top-2 right-2 h-8 w-8 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600"
-                      onClick={() => setMenuPreview(null)}
+                      onClick={() => {
+                        setMenuPreview(null);
+                        setMenuFile(null);
+                        if (menuRef.current) menuRef.current.value = "";
+                      }}
                     >
                       <X className="h-4 w-4" />
                     </button>
@@ -412,11 +465,11 @@ export default function CadastrarLocal() {
                   <div className="w-full border-2 border-dashed border-gray-300 rounded-md p-6 flex flex-col items-center justify-center">
                     <Upload className="h-10 w-10 text-gray-400 mb-2" />
                     <p className="text-sm text-gray-500">Clique para selecionar ou arraste o cardápio (PDF)</p>
-                    <input id="menu" type="file" accept=".pdf" className="hidden" onChange={handleMenuChange} />
+                    <input id="menu" ref={menuRef} type="file" name="file" accept=".pdf" className="hidden" onChange={handleMenuChange} />
                     <button
                       type="button"
                       className="mt-2 px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 flex items-center gap-2"
-                      onClick={() => document.getElementById("menu")?.click()}
+                      onClick={() => menuRef.current?.click()}
                     >
                       <Plus className="h-4 w-4" />
                       Selecionar Cardápio
@@ -477,12 +530,23 @@ export default function CadastrarLocal() {
                 type="submit"
                 className="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-md flex items-center gap-2 transition-colors text-sm font-medium"
               >
-                <Save className="h-4 w-4" /> Salvar Local
+                <Save className="h-4 w-4" /> Cadastrar Local
               </button>
             </div>
           </div>
         </form>
       </main>
+      <ToastContainer 
+        position="top-right"
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
       <Footer />
     </div>
   );
