@@ -5,20 +5,17 @@ export default function ServicosSection() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    const token = localStorage.getItem('token');
+    const organizacaoId = parseInt(localStorage.getItem('organizacaoId'));
+
     useEffect(() => {
         const fetchServicos = async () => {
             try {
-                const token = localStorage.getItem('token');
-                const organizacaoId = localStorage.getItem('organizacaoId');
-
-                console.log('ID da Organização:', organizacaoId); // Debug log
-
                 if (!organizacaoId) {
                     throw new Error('ID da organização não encontrado');
                 }
 
-                const url = `${import.meta.env.VITE_API_URL}/organizacoes/${organizacaoId}/servicos`;
-                console.log('URL da requisição:', url); // Debug log
+                const url = `http://localhost:3000/rest/v1/servicos/organizacao/${organizacaoId}`;
 
                 const response = await fetch(url, {
                     headers: {
@@ -29,23 +26,21 @@ export default function ServicosSection() {
 
                 if (!response.ok) {
                     const errorData = await response.json();
-                    console.error('Erro na resposta:', errorData); // Debug log
                     throw new Error(errorData.message || 'Erro ao buscar serviços');
                 }
 
                 const data = await response.json();
-                console.log('Dados recebidos:', data); // Debug log
                 setServicos(data);
-                setLoading(false);
             } catch (err) {
                 console.error('Erro ao carregar serviços:', err);
                 setError(err.message || 'Erro ao carregar serviços');
+            } finally {
                 setLoading(false);
             }
         };
 
         fetchServicos();
-    }, []);
+    }, [organizacaoId, token]);
 
     if (loading) return <div className="text-center py-8">Carregando serviços...</div>;
     if (error) return <div className="text-red-500 text-center py-8">{error}</div>;
@@ -69,4 +64,4 @@ export default function ServicosSection() {
             </div>
         </div>
     );
-} 
+}
