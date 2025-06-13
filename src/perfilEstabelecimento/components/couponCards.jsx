@@ -18,6 +18,10 @@ const CouponCards = ({ coupons }) => {
               {/* <button className="text-sm underline">Ver regras</button> */}
               <span className="text-xs">Válido até {c.expiration}</span>
             </div>
+            <div className="flex justify-between items-center mt-4">
+              {/* <button className="text-sm underline">Ver regras</button> */}
+              <span className="text-xs">Desconto de {c.descricao}%</span>
+            </div>
             <button
               onClick={() => navigate('/meus-cupons')}
               className={`mt-4 w-full py-1 rounded font-semibold ${c.highlighted ? "bg-white text-black" : "bg-orange-500 text-white"}`}>
