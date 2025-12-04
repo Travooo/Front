@@ -21,10 +21,7 @@ export default function CadastrarLocal() {
   const [menuPreview, setMenuPreview] = useState(null)
 
   const [nome, setNome] = useState('');
-  const [cep, setCep] = useState('');
-  const [cepValido, setCepValido] = useState(true);
   const [endereco, setEndereco] = useState('');
-  const [enderecoHabilitado, setEnderecoHabilitado] = useState(false);
   const [numero, setNumero] = useState('');
   const [horarios, setHorarios] = useState('');
   const [sobre, setSobre] = useState('');
@@ -37,34 +34,12 @@ export default function CadastrarLocal() {
 
   const validarFormulario = () => {
     if (!nome.trim()) return alert("O campo 'Nome' é obrigatório.") || false;
-    if (!cep || cep.length !== 8 || !cepValido) return alert("Informe um CEP válido com 8 dígitos.") || false;
-    if (!enderecoHabilitado || !endereco.trim()) return alert("Endereço não localizado. Verifique o CEP.") || false;
+    if (!endereco.trim() || endereco.length < 3) return alert("Informe o endereço completo.") || false;
     if (!numero.trim()) return alert("O campo 'Número' do endereço é obrigatório.") || false;
     if (!horarios.trim()) return alert("Informe os horários de funcionamento.") || false;
     if (!sobre.trim()) return alert("O campo 'Sobre' é obrigatório.") || false;
     if (!tipo.trim()) return alert("Selecione um tipo de estabelecimento.") || false;
     return true;
-  };
-
-  const handleCepChange = async (e) => {
-    const raw = e.target.value.replace(/\D/g, "").slice(0, 8);
-    setCep(raw);
-    if (raw.length === 8) {
-      const { data: dataCep } = await axios.get(`https://viacep.com.br/ws/${raw}/json/`);
-      if (dataCep?.erro) {
-        setCep('');
-        setCepValido(false);
-        setEndereco('');
-        setEnderecoHabilitado(false);
-        return;
-      }
-      setCepValido(true);
-      setEndereco(`${dataCep.logradouro} - ${dataCep.bairro}`);
-      setEnderecoHabilitado(true);
-    } else {
-      setEndereco('');
-      setEnderecoHabilitado(false);
-    }
   };
 
   const handleImagemChange = (e) => {
@@ -90,37 +65,21 @@ export default function CadastrarLocal() {
     reader.readAsDataURL(file);
   }
 
-  const getLatLng = async (address) => {
-    const GOOGLE_API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
-    const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${GOOGLE_API_KEY}`;
-    const response = await axios.get(url);
-    if (response.data.status === 'OK' && response.data.results.length > 0) {
-      return response.data.results[0].geometry.location;
-    }
-    throw new Error('Endereço inválido');
-  }
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!validarFormulario()) return;
 
     try {
-      const latLng = await getLatLng(`${endereco} - ${numero}`);
-
       const payload = {
         usuario_organizacao_id: userId,
         nome,
         endereco: `${endereco} - ${numero}`,
         horarios,
         sobre,
-        cep,
         tipo,
-        lat: latLng.lat,
-        lng: latLng.lng,
       };
 
-      
       const { data: novoServico } = await axios.post(
         "http://localhost:3000/rest/v1/servicos",
         payload,
@@ -178,16 +137,12 @@ export default function CadastrarLocal() {
         }
       }
 
-
       toast.success("Cadastro realizado com sucesso", {
         onClose: () => navigate("/meus-servicos")
       });
 
       setNome('');
-      setCep('');
-      setCepValido(true);
       setEndereco('');
-      setEnderecoHabilitado(false);
       setNumero('');
       setHorarios('');
       setSobre('');
@@ -199,10 +154,6 @@ export default function CadastrarLocal() {
 
       if (imagemRef.current) imagemRef.current.value = "";
       if (menuRef.current) menuRef.current.value = "";
-
-/*       toast.success("Cadastro realizado com sucesso", {
-        onClose: () => navigate("/meus-servicos")
-      }); */
 
     } catch (error) {
       console.error("Erro no cadastro:", error);
@@ -256,27 +207,6 @@ export default function CadastrarLocal() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-8 gap-4 items-end">
-            {/* CEP */}
-            <div className="col-span-1">
-              <label htmlFor="cep" className="block text-base font-medium text-gray-700">CEP</label>
-              <input
-                id="cep"
-                name="cep"
-                type="text"
-                placeholder={cepValido ? "00000-000" : "CEP inválido"}
-                required
-                minLength={8}
-                maxLength={9}
-                value={cep.length > 5 ? `${cep.slice(0, 5)}-${cep.slice(5)}` : cep}
-                onChange={handleCepChange}
-                className={`mt-1 block w-full px-3 py-2 bg-white border ${
-                  cepValido ? "border-gray-300" : "border-red-500"
-                } rounded-md shadow-sm focus:outline-none focus:ring-2 ${
-                  cepValido ? "focus:ring-amber-500 focus:border-amber-500" : "focus:ring-red-500 focus:border-red-500"
-                }`}                  
-              />
-            </div>
-            {/* ENDEREÇO */}
             <div className="col-span-6">
               <label htmlFor="localizacao" className="block text-base font-medium text-gray-700 flex items-center gap-2">
                 <span className="flex items-center gap-2">
@@ -288,22 +218,20 @@ export default function CadastrarLocal() {
                 id="localizacao"
                 name="endereco"
                 type="text"
-                placeholder="Autopreenchido pelo CEP"
+                placeholder="Digite o endereço completo (rua, bairro, cidade)"
                 required
                 value={endereco}
                 minLength={3}
-                maxLength={65}
+                maxLength={200}
                 onChange={(e) => {
-                  const limiteVisual = 65;
+                  const limiteVisual = 200;
                   const valor = e.target.value;
                   if (valor.length <= limiteVisual) {
                     setEndereco(valor);
                   }
                 }}
-                disabled={!enderecoHabilitado}
                 className={`mt-1 block w-full px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500
-                  border border-gray-300
-                  ${!enderecoHabilitado ? "bg-gray-100 text-gray-500 cursor-not-allowed" : "bg-white"}
+                  border border-gray-300 bg-white
                 `}                  
               />
             </div>
@@ -481,43 +409,6 @@ export default function CadastrarLocal() {
           </div>
 
           <div className="flex items-center space-x-2 pt-2">
-            {/*COMENTEI BOTÃO DE CUPONS*/}
-            
-            {/*
-            <div className="flex-1">
-              <label htmlFor="cupom" className="block text-base font-medium text-gray-700 flex items-center gap-2">
-                <Ticket className="h-4 w-4" /> Atribuir Cupom
-              </label>
-              <div className="flex items-center mt-1">
-                <div className="relative inline-block w-10 mr-2 align-middle select-none">
-                  <input
-                    type="checkbox"
-                    id="cupom"
-                    checked={cupomAtivo}
-                    onChange={() => setCupomAtivo(!cupomAtivo)}
-                    className="opacity-0 absolute h-0 w-0"
-                  />
-                  <div className="bg-gray-200 rounded-full h-6 w-11 cursor-pointer flex items-center">
-                    <div
-                      className={`transform duration-200 ease-in-out h-5 w-5 rounded-full shadow-md ${
-                        cupomAtivo ? "translate-x-6 bg-amber-500" : "translate-x-1 bg-white"
-                      }`}
-                    ></div>
-                  </div>
-                </div>
-                <span className="ml-2 text-sm text-gray-600">{cupomAtivo ? "Cupom ativo" : "Sem cupom"}</span>
-                {cupomAtivo && (
-                  <button
-                    type="button"
-                    className="ml-4 px-3 py-1 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
-                    onClick={handleCupomClick}
-                  >
-                  Configurar Cupom
-                  </button>
-                )}
-              </div>
-            </div>
-            */}
             <div className="flex justify-end space-x-4 pt-4">
               <button
                 type="button"
