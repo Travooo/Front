@@ -13,6 +13,7 @@ import CadastrarLocal from './cadastrar-local/page';
 import CuponsPage from './FrontPgCupons/cuponsPage';
 import RegisterPage from './registro/page';
 import DashboardAdmin from './dashboard/page';
+import ViabilidadeEletricoPage from './viabilidade-eletrico/page';
 import './styles/tailwind.css';
 import { UserProvider } from './context/UserContext';
 
@@ -35,6 +36,7 @@ function App() {
           <Route path="/perfil-estabelecimento/:id" element={<PerfilEstabelecimento />} />
           <Route path="/editar-servico" element={<EditarServico />} />
           <Route path="/dashboard" element={<DashboardAdmin />} />
+          <Route path="/viabilidade-eletrico" element={<ViabilidadeEletricoPage />} />
         </Routes>
       </Router>
     </UserProvider>
